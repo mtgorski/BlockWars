@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "compilationOptions": {
     "emitEntryPoint": false
@@ -8,6 +8,9 @@
     "AutoFixture.AutoMoq": "3.37.3",
     "AutoFixture.Xunit2": "3.37.3",
     "BlockWars.GameState.Api": "1.0.0-*",
+    "BlockWars.GameState.Models": "1.0.0-*",
+    "FluentAssertions": "4.1.1",
+    "Moq": "4.2.1510.2205",
     "xunit": "2.2.0-beta1-build3239",
     "xunit.runner.dnx": "2.1.0-rc1-build204"
   },

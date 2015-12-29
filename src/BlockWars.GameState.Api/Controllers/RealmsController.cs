@@ -1,18 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-
+using BlockWars.GameState.Models;
 
 namespace BlockWars.GameState.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/realms")]
     public class RealmsController : Controller
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IGetRealms _getRealmsService;
 
+        public RealmsController(IGetRealms getRealmsService)
+        {
+            _getRealmsService = getRealmsService;
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetRealms()
+        {
+            var realms = await _getRealmsService.GetRealmsAsync();
+            return Ok(realms);
+        }
     }
 }
