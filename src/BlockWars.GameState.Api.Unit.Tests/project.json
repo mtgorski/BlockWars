@@ -7,6 +7,7 @@
   "dependencies": {
     "AutoFixture.AutoMoq": "3.37.3",
     "AutoFixture.Xunit2": "3.37.3",
+    "AutoMapper": "4.1.1",
     "BlockWars.GameState.Api": "1.0.0-*",
     "BlockWars.GameState.Models": "1.0.0-*",
     "FluentAssertions": "4.1.1",

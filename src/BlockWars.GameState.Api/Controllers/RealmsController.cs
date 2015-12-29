@@ -24,7 +24,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpPut("{realmId}")]
-        public async Task<IActionResult> PutRealmAsync(string realmId, Realm realm)
+        public async Task<IActionResult> PutRealmAsync(string realmId, [FromBody]Realm realm)
         {
             if(!ModelState.IsValid)
             {

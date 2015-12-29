@@ -2,7 +2,6 @@
 using BlockWars.GameState.Models;
 using FluentAssertions;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
 using System.Collections.Generic;
