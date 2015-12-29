@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BlockWars.GameState.Api", "src\BlockWars.GameState.Api\BlockWars.GameState.Api.xproj", "{D5EA53FA-D8C5-4B54-92F6-C9F2EB86A57B}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BlockWars.GameState.Api.Unit.Tests", "src\BlockWars.GameState.Api.Unit.Tests\BlockWars.GameState.Api.Unit.Tests.xproj", "{3D538E28-EF85-4E99-A9E3-48192E37BC3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,11 +24,16 @@ Global
 		{D5EA53FA-D8C5-4B54-92F6-C9F2EB86A57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5EA53FA-D8C5-4B54-92F6-C9F2EB86A57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5EA53FA-D8C5-4B54-92F6-C9F2EB86A57B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D538E28-EF85-4E99-A9E3-48192E37BC3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D538E28-EF85-4E99-A9E3-48192E37BC3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D538E28-EF85-4E99-A9E3-48192E37BC3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D538E28-EF85-4E99-A9E3-48192E37BC3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D5EA53FA-D8C5-4B54-92F6-C9F2EB86A57B} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
+		{3D538E28-EF85-4E99-A9E3-48192E37BC3B} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
 	EndGlobalSection
 EndGlobal
