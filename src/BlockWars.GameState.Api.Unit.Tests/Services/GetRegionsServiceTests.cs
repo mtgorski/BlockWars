@@ -18,15 +18,15 @@ namespace BlockWars.GameState.Api.Unit.Tests.Services
         public async Task GetRegions_ShouldReturnRegions(
             [Frozen] Mock<IRegionRepository> regionRepository,
             [Frozen] Mock<IMappingEngine> mapper,
-            string givenRealmId,
+            string givenLeagueId,
             ICollection<RegionData> regionData,
             List<Region> regions,
             GetRegionsService sut)
         {
-            regionRepository.Setup(m => m.GetRegionsAsync(givenRealmId)).ReturnsAsync(regionData);
+            regionRepository.Setup(m => m.GetRegionsAsync(givenLeagueId)).ReturnsAsync(regionData);
             mapper.Setup(m => m.Map<List<Region>>(regionData)).Returns(regions);
 
-            var actual = await sut.GetRegionsAsync(givenRealmId);
+            var actual = await sut.GetRegionsAsync(givenLeagueId);
 
             actual.Should().BeSameAs(regions);
         }

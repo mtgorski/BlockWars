@@ -18,12 +18,12 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         public async Task GetRegionsAsync_ShouldReturnListOfRegions(
             [Frozen] Mock<IGetRegions> getRegionsService,
             ICollection<Region> regions,
-            string givenRealmId,
+            string givenLeagueId,
             RegionsController sut)
         {
-            getRegionsService.Setup(m => m.GetRegionsAsync(givenRealmId)).ReturnsAsync(regions);
+            getRegionsService.Setup(m => m.GetRegionsAsync(givenLeagueId)).ReturnsAsync(regions);
 
-            var actual = await sut.GetRegionsAsync(givenRealmId);
+            var actual = await sut.GetRegionsAsync(givenLeagueId);
 
             actual.Should().BeAssignableTo<HttpOkObjectResult>();
             actual.As<HttpOkObjectResult>().Value.Should().Be(regions);
@@ -32,15 +32,15 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task PutRegionAsync_ShouldUpsertRegion(
             [Frozen] Mock<IUpsertRegion> upsertRegionService,
-            string givenRealmId,
+            string givenLeagueId,
             string givenRegionId,
             Region givenRegion,
             RegionsController sut)
         {
-            upsertRegionService.Setup(m => m.UpsertRegionAsync(givenRealmId, givenRegionId, givenRegion))
+            upsertRegionService.Setup(m => m.UpsertRegionAsync(givenLeagueId, givenRegionId, givenRegion))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            var actual = await sut.PutRegionAsync(givenRealmId, givenRegionId, givenRegion);
+            var actual = await sut.PutRegionAsync(givenLeagueId, givenRegionId, givenRegion);
 
             actual.Should().BeAssignableTo<HttpOkResult>();
             upsertRegionService.Verify();
@@ -49,7 +49,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task BuildBlockAsync_ShouldBuild(
             [Frozen] Mock<IBuildBlock> buildBlockService,
-            string givenRealmId,
+            string givenLeagueId,
             string givenRegionId,
             BuildRequest givenBuildRequest,
             RegionsController sut)
@@ -57,7 +57,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             buildBlockService.Setup(m => m.BuildBlockAsync(givenRegionId, givenBuildRequest))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            var actual = await sut.BuildBlockAsync(givenRealmId, givenRegionId, givenBuildRequest);
+            var actual = await sut.BuildBlockAsync(givenLeagueId, givenRegionId, givenBuildRequest);
 
             actual.Should().BeAssignableTo<HttpOkResult>();
             buildBlockService.Verify();
@@ -66,7 +66,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task DestroyBlockAsync_ShouldDestroy(
             [Frozen] Mock<IDestroyBlock> destroyBlockService,
-            string givenRealmId,
+            string givenLeagueId,
             string givenRegionId,
             DestroyRequest givenDestroyRequest,
             RegionsController sut)
@@ -74,7 +74,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             destroyBlockService.Setup(m => m.DestroyBlockAsync(givenRegionId, givenDestroyRequest))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            var actual = await sut.DestroyBlockAsync(givenRealmId, givenRegionId, givenDestroyRequest);
+            var actual = await sut.DestroyBlockAsync(givenLeagueId, givenRegionId, givenDestroyRequest);
 
             actual.Should().BeAssignableTo<HttpOkResult>();
             destroyBlockService.Verify();

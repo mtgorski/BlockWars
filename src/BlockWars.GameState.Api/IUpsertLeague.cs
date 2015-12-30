@@ -1,11 +1,10 @@
 ﻿using BlockWars.GameState.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BlockWars.GameState.Api
 {
-    public interface IGetRealms
+    public interface IUpsertLeague
     {
-        Task<ICollection<Realm>> GetRealmsAsync();
+        Task UpsertLeagueAsync(string leagueId, League league);
     }
 }

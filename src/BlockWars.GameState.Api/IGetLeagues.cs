@@ -1,13 +1,11 @@
 ﻿using BlockWars.GameState.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlockWars.GameState.Api
 {
-    public interface IGetRegions
+    public interface IGetLeagues
     {
-        Task<ICollection<Region>> GetRegionsAsync(string leagueId);
+        Task<ICollection<League>> GetLeaguesAsync();
     }
 }

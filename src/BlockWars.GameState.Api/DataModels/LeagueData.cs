@@ -3,9 +3,9 @@
 namespace BlockWars.GameState.Api.DataModels
 {
     [BsonIgnoreExtraElements]
-    public class RealmData
+    public class LeagueData
     {
-        public string RealmId { get; set; }
+        public string LeagueId { get; set; }
 
         public string Name { get; set; }
 

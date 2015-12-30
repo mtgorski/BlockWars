@@ -5,6 +5,6 @@ namespace BlockWars.GameState.Api
 {
     public interface IUpsertRegion
     {
-        Task UpsertRegionAsync(string realmId, string regionId, Region region);
+        Task UpsertRegionAsync(string leagueId, string regionId, Region region);
     }
 }

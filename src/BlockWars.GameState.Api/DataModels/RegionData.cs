@@ -7,7 +7,7 @@ namespace BlockWars.GameState.Api.DataModels
     {
         public string RegionId { get; set; }
 
-        public string RealmId { get; set; }
+        public string LeagueId { get; set; }
 
         public string Name { get; set; }
 

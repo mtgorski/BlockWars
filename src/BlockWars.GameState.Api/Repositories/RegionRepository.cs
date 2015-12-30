@@ -10,7 +10,7 @@ namespace BlockWars.GameState.Api.Repositories
 {
     public interface IRegionRepository
     {
-        Task<ICollection<RegionData>> GetRegionsAsync(string realmId);
+        Task<ICollection<RegionData>> GetRegionsAsync(string leagueId);
         Task UpsertRegionAsync(string regionId, RegionData regionData);
     }
 
@@ -36,9 +36,9 @@ namespace BlockWars.GameState.Api.Repositories
             return GetDestroyedCollection(regionId, request.Color).InsertOneAsync(new BsonDocument());
         }
 
-        public async Task<ICollection<RegionData>> GetRegionsAsync(string realmId)
+        public async Task<ICollection<RegionData>> GetRegionsAsync(string leagueId)
         {
-            var regions = await _regions.Find(x => x.RealmId == realmId).ToListAsync();
+            var regions = await _regions.Find(x => x.LeagueId == leagueId).ToListAsync();
 
             foreach(var region in regions)
             {

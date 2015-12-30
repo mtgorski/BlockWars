@@ -17,10 +17,10 @@ namespace BlockWars.GameState.Api.Services
             _regionRepository = regionRepository;
         }
 
-        public Task UpsertRegionAsync(string realmId, string regionId, Region region)
+        public Task UpsertRegionAsync(string leagueId, string regionId, Region region)
         {
             var regionData = _mapper.Map<RegionData>(region);
-            regionData.RealmId = realmId;
+            regionData.LeagueId = leagueId;
             regionData.RegionId = regionId;
 
             return _regionRepository.UpsertRegionAsync(regionId, regionData);

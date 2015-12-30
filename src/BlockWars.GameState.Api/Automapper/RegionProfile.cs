@@ -9,7 +9,7 @@ namespace BlockWars.GameState.Api.Automapper
         protected override void Configure()
         {
             CreateMap<Region, RegionData>()
-               .ForMember(dest => dest.RealmId, o => o.Ignore());
+               .ForMember(dest => dest.LeagueId, o => o.Ignore());
             CreateMap<RegionData, Region>();
         }
     }

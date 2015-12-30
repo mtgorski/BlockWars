@@ -20,32 +20,32 @@ namespace BlockWars.GameState.Api.Controllers
             _destroyBlockService = destroyBlockService;
         }
 
-        [HttpGet("api/realms/{realmId}/regions")]
-        public async Task<IActionResult> GetRegionsAsync(string realmId)
+        [HttpGet("api/leagues/{leagueId}/regions")]
+        public async Task<IActionResult> GetRegionsAsync(string leagueId)
         {
             //TODO: add validation attributes
-            var regions = await _getRegionsService.GetRegionsAsync(realmId);
+            var regions = await _getRegionsService.GetRegionsAsync(leagueId);
             return Ok(regions);
         }
 
-        [HttpPut("api/realms/{realmId}/regions/{regionId}")]
-        public async Task<IActionResult> PutRegionAsync(string realmId, string regionId, [FromBody] Region region)
+        [HttpPut("api/leagues/{leagueId}/regions/{regionId}")]
+        public async Task<IActionResult> PutRegionAsync(string leagueId, string regionId, [FromBody] Region region)
         {
             //TODO: add validation attributes
-            await _upsertRegionService.UpsertRegionAsync(realmId, regionId, region);
+            await _upsertRegionService.UpsertRegionAsync(leagueId, regionId, region);
             return Ok();
         }
 
-        [HttpPost("api/realms/{realmId}/regions/{regionId}/build_block")]
-        public async Task<IActionResult> BuildBlockAsync(string realmId, string regionId, [FromBody]BuildRequest buildRequest)
+        [HttpPost("api/leagues/{leagueId}/regions/{regionId}/build_block")]
+        public async Task<IActionResult> BuildBlockAsync(string leagueId, string regionId, [FromBody]BuildRequest buildRequest)
         {
             //TODO: add validation attributes
             await _buildBlockService.BuildBlockAsync(regionId, buildRequest);
             return Ok();
         }
 
-        [HttpPost("api/realms/{realmId}/regions/{regionId}/destroy_block")]
-        public async Task<IActionResult> DestroyBlockAsync(string realmId, string regionId, [FromBody]DestroyRequest destroyRequest)
+        [HttpPost("api/leagues/{leagueId}/regions/{regionId}/destroy_block")]
+        public async Task<IActionResult> DestroyBlockAsync(string leagueId, string regionId, [FromBody]DestroyRequest destroyRequest)
         {
             //TODO: Add validation attributes
             await _destroyBlockService.DestroyBlockAsync(regionId, destroyRequest);

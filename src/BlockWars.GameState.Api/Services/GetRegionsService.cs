@@ -19,9 +19,9 @@ namespace BlockWars.GameState.Api.Services
             _mapper = mapper;
         }
 
-        public async Task<ICollection<Region>> GetRegionsAsync(string realmId)
+        public async Task<ICollection<Region>> GetRegionsAsync(string leagueId)
         {
-            var regionData = await _regionRepository.GetRegionsAsync(realmId);
+            var regionData = await _regionRepository.GetRegionsAsync(leagueId);
             var regions = _mapper.Map<List<Region>>(regionData);
 
             return regions;

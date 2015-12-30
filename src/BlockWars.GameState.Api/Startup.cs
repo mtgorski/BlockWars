@@ -16,16 +16,16 @@ namespace BlockWars.GameState.Api
         {
             services.AddMvc();
 
-            services.AddScoped<IRealmRepository, RealmRepository>();
-            services.AddScoped<IGetRealms, GetRealmsService>();
-            services.AddScoped<IUpsertRealm, UpsertRealmService>();
+            services.AddScoped<ILeagueRepository, LeagueRepository>();
+            services.AddScoped<IGetLeagues, GetLeaguesService>();
+            services.AddScoped<IUpsertLeague, UpsertLeagueService>();
             services.AddScoped<IBuildBlock, RegionRepository>();
             services.AddScoped<IDestroyBlock, RegionRepository>();
             services.AddScoped<IUpsertRegion, UpsertRegionService>();
             services.AddScoped<IGetRegions, GetRegionsService>();
             services.AddScoped<IRegionRepository, RegionRepository>();
 
-            Mapper.AddProfile<RealmProfile>();
+            Mapper.AddProfile<LeagueProfile>();
             Mapper.AddProfile<RegionProfile>();
             services.AddSingleton(_ => Mapper.Engine);
         }

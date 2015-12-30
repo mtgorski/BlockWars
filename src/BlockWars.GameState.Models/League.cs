@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlockWars.GameState.Models
 {
-    public class Realm
+    public class League
     {
-        public string RealmId { get; set; }
+        public string LeagueId { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 1)]
