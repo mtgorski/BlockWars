@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
 using BlockWars.GameState.Api.Automapper;
@@ -20,15 +19,24 @@ namespace BlockWars.GameState.Api
             services.AddScoped<IRealmRepository, RealmRepository>();
             services.AddScoped<IGetRealms, GetRealmsService>();
             services.AddScoped<IUpsertRealm, UpsertRealmService>();
+            services.AddScoped<IBuildBlock, RegionRepository>();
+            services.AddScoped<IDestroyBlock, RegionRepository>();
+            services.AddScoped<IUpsertRegion, UpsertRegionService>();
+            services.AddScoped<IGetRegions, GetRegionsService>();
+            services.AddScoped<IRegionRepository, RegionRepository>();
 
             Mapper.AddProfile<RealmProfile>();
+            Mapper.AddProfile<RegionProfile>();
             services.AddSingleton(_ => Mapper.Engine);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            app.UseDeveloperExceptionPage();
+
             app.UseMvc();
+            
             app.UseIISPlatformHandler();
 
         }
