@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0-*",
+  "description": "BlockWars.GameState.Client Class Library",
+  "authors": [ "Matt" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "frameworks": {
+    "net451": { }
+  },
+  "dependencies": {
+    "BlockWars.GameState.Models": "1.0.0-*",
+    "Microsoft.AspNet.WebApi.Client": "5.2.3"
+  }
+}
