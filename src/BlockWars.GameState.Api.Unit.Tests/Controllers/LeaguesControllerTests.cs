@@ -24,7 +24,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             var actual = await sut.GetLeaguesAsync();
 
             actual.Should().BeOfType<HttpOkObjectResult>();
-            actual.As<HttpOkObjectResult>().Value.Should().Be(leagues);
+            actual.As<HttpOkObjectResult>().Value.As<LeaguesResponse>().Leagues.Should().BeSameAs(leagues);
         }
 
         [Theory, AutoMoqController]

@@ -26,7 +26,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             var actual = await sut.GetRegionsAsync(givenLeagueId);
 
             actual.Should().BeAssignableTo<HttpOkObjectResult>();
-            actual.As<HttpOkObjectResult>().Value.Should().Be(regions);
+            actual.As<HttpOkObjectResult>().Value.As<RegionsResponse>().Regions.Should().BeSameAs(regions);
         }
 
         [Theory, AutoMoqController]
