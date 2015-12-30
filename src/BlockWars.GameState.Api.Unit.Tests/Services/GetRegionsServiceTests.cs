@@ -6,6 +6,7 @@ using BlockWars.GameState.Models;
 using FluentAssertions;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,7 +19,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Services
         public async Task GetRegions_ShouldReturnRegions(
             [Frozen] Mock<IRegionRepository> regionRepository,
             [Frozen] Mock<IMappingEngine> mapper,
-            string givenLeagueId,
+            Guid givenLeagueId,
             ICollection<RegionData> regionData,
             List<Region> regions,
             GetRegionsService sut)

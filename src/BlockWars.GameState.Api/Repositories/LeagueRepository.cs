@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using BlockWars.GameState.Api.DataModels;
+using System;
 
 namespace BlockWars.GameState.Api.Repositories
 {
     public interface ILeagueRepository
     {
         Task<ICollection<LeagueData>> GetLeaguesAsync();
-        Task UpsertLeagueAsync(string leagueId, LeagueData league);
+        Task UpsertLeagueAsync(Guid leagueId, LeagueData league);
     }
 
     public class LeagueRepository : ILeagueRepository
@@ -27,7 +28,7 @@ namespace BlockWars.GameState.Api.Repositories
             return await _leagues.Find(q => true).ToListAsync();
         }
 
-        public Task UpsertLeagueAsync(string leagueId, LeagueData league)
+        public Task UpsertLeagueAsync(Guid leagueId, LeagueData league)
         {
             return _leagues.FindOneAndReplaceAsync<LeagueData>(
                 r => r.LeagueId == leagueId, 

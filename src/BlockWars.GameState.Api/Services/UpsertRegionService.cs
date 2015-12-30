@@ -3,6 +3,7 @@ using BlockWars.GameState.Models;
 using BlockWars.GameState.Api.Repositories;
 using AutoMapper;
 using BlockWars.GameState.Api.DataModels;
+using System;
 
 namespace BlockWars.GameState.Api.Services
 {
@@ -17,7 +18,7 @@ namespace BlockWars.GameState.Api.Services
             _regionRepository = regionRepository;
         }
 
-        public Task UpsertRegionAsync(string leagueId, string regionId, Region region)
+        public Task UpsertRegionAsync(Guid leagueId, Guid regionId, Region region)
         {
             var regionData = _mapper.Map<RegionData>(region);
             regionData.LeagueId = leagueId;

@@ -5,6 +5,7 @@ using BlockWars.GameState.Api.Services;
 using BlockWars.GameState.Models;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,7 +17,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Services
         public async Task UpsertLeagueAsync_ShouldUpsertLeague(
             [Frozen] Mock<ILeagueRepository> leagueRepo,
             [Frozen] Mock<IMappingEngine> mapper,
-            string givenLeagueId,
+            Guid givenLeagueId,
             League givenLeague,
             LeagueData leagueData,
             UpsertLeagueService sut)

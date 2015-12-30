@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using BlockWars.GameState.Models;
+using System;
 
 namespace BlockWars.GameState.Api.Controllers
 {
@@ -24,7 +25,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpPut("{leagueId}")]
-        public async Task<IActionResult> PutLeagueAsync(string leagueId, [FromBody]League league)
+        public async Task<IActionResult> PutLeagueAsync(Guid leagueId, [FromBody]League league)
         {
             if(!ModelState.IsValid)
             {

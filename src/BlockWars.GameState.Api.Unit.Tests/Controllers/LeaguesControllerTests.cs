@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.AspNet.Mvc;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -30,7 +31,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         public async Task PutLeagueAsync_ShouldReturnOk(
             [Frozen] Mock<IUpsertLeague> upsertLeagueService,
             LeaguesController sut,
-            string givenLeagueId,
+            Guid givenLeagueId,
             League givenLeague)
         {
             upsertLeagueService.Setup(m => m.UpsertLeagueAsync(givenLeagueId, givenLeague)).Returns(Task.FromResult(0)).Verifiable();
@@ -47,7 +48,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             LeaguesController sut,
             string errorKey,
             string errorMessage,
-            string givenLeagueId,
+            Guid givenLeagueId,
             League givenLeague)
         {
             sut.ModelState.AddModelError(errorKey, errorMessage);
@@ -56,7 +57,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
 
             actual.Should().BeOfType<BadRequestObjectResult>();
             //TODO: test that the correct model state is returned
-            upsertLeagueService.Verify(m => m.UpsertLeagueAsync(It.IsAny<string>(), It.IsAny<League>()), Times.Never);
+            upsertLeagueService.Verify(m => m.UpsertLeagueAsync(It.IsAny<Guid>(), It.IsAny<League>()), Times.Never);
         }
     }
 }

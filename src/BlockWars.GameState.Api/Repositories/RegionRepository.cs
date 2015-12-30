@@ -10,8 +10,8 @@ namespace BlockWars.GameState.Api.Repositories
 {
     public interface IRegionRepository
     {
-        Task<ICollection<RegionData>> GetRegionsAsync(string leagueId);
-        Task UpsertRegionAsync(string regionId, RegionData regionData);
+        Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId);
+        Task UpsertRegionAsync(Guid regionId, RegionData regionData);
     }
 
     public class RegionRepository : IRegionRepository, IBuildBlock, IDestroyBlock
@@ -26,17 +26,17 @@ namespace BlockWars.GameState.Api.Repositories
             _regions = _database.GetCollection<RegionData>("Regions");
         }
 
-        public Task BuildBlockAsync(string regionId, BuildRequest request)
+        public Task BuildBlockAsync(Guid regionId, BuildRequest request)
         {
             return GetBuiltCollection(regionId, request.Color).InsertOneAsync(new BsonDocument());
         }
 
-        public Task DestroyBlockAsync(string regionId, DestroyRequest request)
+        public Task DestroyBlockAsync(Guid regionId, DestroyRequest request)
         {
             return GetDestroyedCollection(regionId, request.Color).InsertOneAsync(new BsonDocument());
         }
 
-        public async Task<ICollection<RegionData>> GetRegionsAsync(string leagueId)
+        public async Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId)
         {
             var regions = await _regions.Find(x => x.LeagueId == leagueId).ToListAsync();
 
@@ -54,17 +54,17 @@ namespace BlockWars.GameState.Api.Repositories
             return regions;
         }
 
-        private IMongoCollection<BsonDocument> GetBuiltCollection(string regionId, BlockColor color)
+        private IMongoCollection<BsonDocument> GetBuiltCollection(Guid regionId, BlockColor color)
         {
             return _database.GetCollection<BsonDocument>(regionId + "_" + color + "_Built");
         }
 
-        private IMongoCollection<BsonDocument> GetDestroyedCollection(string regionId, BlockColor color)
+        private IMongoCollection<BsonDocument> GetDestroyedCollection(Guid regionId, BlockColor color)
         {
             return _database.GetCollection<BsonDocument>(regionId + "_" + color + "_Destroyed");
         }
 
-        public Task UpsertRegionAsync(string regionId, RegionData regionData)
+        public Task UpsertRegionAsync(Guid regionId, RegionData regionData)
         {
             return _regions
                 .FindOneAndReplaceAsync<RegionData>(

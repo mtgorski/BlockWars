@@ -8,6 +8,6 @@ namespace BlockWars.GameState.Api
 {
     public interface IGetRegions
     {
-        Task<ICollection<Region>> GetRegionsAsync(string leagueId);
+        Task<ICollection<Region>> GetRegionsAsync(Guid leagueId);
     }
 }

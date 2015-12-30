@@ -6,7 +6,7 @@ namespace BlockWars.GameState.Api.Services
 {
     public class BuildBlockService : IBuildBlock
     {
-        public Task BuildBlockAsync(string regionId, BuildRequest request)
+        public Task BuildBlockAsync(Guid regionId, BuildRequest request)
         {
             throw new NotImplementedException();
         }

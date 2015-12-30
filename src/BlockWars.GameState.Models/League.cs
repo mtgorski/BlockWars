@@ -1,12 +1,13 @@
 ﻿
 
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlockWars.GameState.Models
 {
     public class League
     {
-        public string LeagueId { get; set; }
+        public Guid LeagueId { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 1)]

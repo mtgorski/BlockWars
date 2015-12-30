@@ -18,7 +18,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         public async Task GetRegionsAsync_ShouldReturnListOfRegions(
             [Frozen] Mock<IGetRegions> getRegionsService,
             ICollection<Region> regions,
-            string givenLeagueId,
+            Guid givenLeagueId,
             RegionsController sut)
         {
             getRegionsService.Setup(m => m.GetRegionsAsync(givenLeagueId)).ReturnsAsync(regions);
@@ -32,8 +32,8 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task PutRegionAsync_ShouldUpsertRegion(
             [Frozen] Mock<IUpsertRegion> upsertRegionService,
-            string givenLeagueId,
-            string givenRegionId,
+            Guid givenLeagueId,
+            Guid givenRegionId,
             Region givenRegion,
             RegionsController sut)
         {
@@ -49,8 +49,8 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task BuildBlockAsync_ShouldBuild(
             [Frozen] Mock<IBuildBlock> buildBlockService,
-            string givenLeagueId,
-            string givenRegionId,
+            Guid givenLeagueId,
+            Guid givenRegionId,
             BuildRequest givenBuildRequest,
             RegionsController sut)
         {
@@ -66,8 +66,8 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
         [Theory, AutoMoqController]
         public async Task DestroyBlockAsync_ShouldDestroy(
             [Frozen] Mock<IDestroyBlock> destroyBlockService,
-            string givenLeagueId,
-            string givenRegionId,
+            Guid givenLeagueId,
+            Guid givenRegionId,
             DestroyRequest givenDestroyRequest,
             RegionsController sut)
         {

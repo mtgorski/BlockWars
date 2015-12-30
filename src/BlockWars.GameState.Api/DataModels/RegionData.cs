@@ -1,13 +1,14 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace BlockWars.GameState.Api.DataModels
 {
     [BsonIgnoreExtraElements]
     public class RegionData
     {
-        public string RegionId { get; set; }
+        public Guid RegionId { get; set; }
 
-        public string LeagueId { get; set; }
+        public Guid LeagueId { get; set; }
 
         public string Name { get; set; }
 

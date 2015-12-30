@@ -6,7 +6,7 @@ namespace BlockWars.GameState.Api.Services
 {
     public class DestroyBlockService : IDestroyBlock
     {
-        public Task DestroyBlockAsync(string regionId, DestroyRequest request)
+        public Task DestroyBlockAsync(Guid regionId, DestroyRequest request)
         {
             throw new NotImplementedException();
         }

@@ -5,6 +5,7 @@ using BlockWars.GameState.Api.Services;
 using BlockWars.GameState.Models;
 using Moq;
 using Ploeh.AutoFixture.Xunit2;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,8 +17,8 @@ namespace BlockWars.GameState.Api.Unit.Tests.Services
         public async Task UpsertRegionAsync_ShouldUpsertRegion(
             [Frozen]Mock<IRegionRepository> regionRepository,
             [Frozen]Mock<IMappingEngine> mappingEngine,
-            string givenLeagueId,
-            string givenRegionId,
+            Guid givenLeagueId,
+            Guid givenRegionId,
             Region givenRegion,
             RegionData regionData,
             UpsertRegionService sut)

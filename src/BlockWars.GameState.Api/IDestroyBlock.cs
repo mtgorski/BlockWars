@@ -1,10 +1,11 @@
 ﻿using BlockWars.GameState.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace BlockWars.GameState.Api
 {
     public interface IDestroyBlock
     {
-        Task DestroyBlockAsync(string regionId, DestroyRequest request);
+        Task DestroyBlockAsync(Guid regionId, DestroyRequest request);
     }
 }

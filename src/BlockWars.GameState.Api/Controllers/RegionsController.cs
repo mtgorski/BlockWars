@@ -21,7 +21,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpGet("api/leagues/{leagueId}/regions")]
-        public async Task<IActionResult> GetRegionsAsync(string leagueId)
+        public async Task<IActionResult> GetRegionsAsync(Guid leagueId)
         {
             //TODO: add validation attributes
             var regions = await _getRegionsService.GetRegionsAsync(leagueId);
@@ -29,7 +29,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpPut("api/leagues/{leagueId}/regions/{regionId}")]
-        public async Task<IActionResult> PutRegionAsync(string leagueId, string regionId, [FromBody] Region region)
+        public async Task<IActionResult> PutRegionAsync(Guid leagueId, Guid regionId, [FromBody] Region region)
         {
             //TODO: add validation attributes
             await _upsertRegionService.UpsertRegionAsync(leagueId, regionId, region);
@@ -37,7 +37,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpPost("api/leagues/{leagueId}/regions/{regionId}/build_block")]
-        public async Task<IActionResult> BuildBlockAsync(string leagueId, string regionId, [FromBody]BuildRequest buildRequest)
+        public async Task<IActionResult> BuildBlockAsync(Guid leagueId, Guid regionId, [FromBody]BuildRequest buildRequest)
         {
             //TODO: add validation attributes
             await _buildBlockService.BuildBlockAsync(regionId, buildRequest);
@@ -45,7 +45,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [HttpPost("api/leagues/{leagueId}/regions/{regionId}/destroy_block")]
-        public async Task<IActionResult> DestroyBlockAsync(string leagueId, string regionId, [FromBody]DestroyRequest destroyRequest)
+        public async Task<IActionResult> DestroyBlockAsync(Guid leagueId, Guid regionId, [FromBody]DestroyRequest destroyRequest)
         {
             //TODO: Add validation attributes
             await _destroyBlockService.DestroyBlockAsync(regionId, destroyRequest);
