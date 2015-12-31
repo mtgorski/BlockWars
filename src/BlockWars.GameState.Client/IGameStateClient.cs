@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlockWars.GameState.Client
 {
-    interface IGameStateClient
+    public interface IGameStateClient
     {
         Task<ICollection<League>> GetLeaguesAsync();
 

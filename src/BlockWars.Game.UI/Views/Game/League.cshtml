@@ -23,12 +23,15 @@
     $(function () {
         var gameHub = $.connection.game;
         var regionTemplate = "<div><p style=\"font-size:30px\">{Name}:</p> <p style=\"color:blue;font-size:30px\">{BlueCount}</p> <p style=\"color:red;font-size:30px\">{RedCount}</p></div>"
+        
+        gameHub.state.leagueId = "5a44f339-3133-4f79-a6dc-1862568569cc";
 
         gameHub.client.updateRegionInfo = function (regionInfo) {
             $("#gameContainer").empty();
             $.each(regionInfo, function () {
                 $("#gameContainer").append(regionTemplate.supplant(this))
-            })
+            });
+            console.log("wtf");
         }
 
         $.connection.hub.start();

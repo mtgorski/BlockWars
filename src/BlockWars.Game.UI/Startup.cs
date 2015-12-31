@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using BlockWars.GameState.Client;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace BlockWars.Game.UI
 {
@@ -11,7 +13,14 @@ namespace BlockWars.Game.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSignalR(o => o.Hubs.EnableDetailedErrors = true);
+            services.AddSingleton<HttpClient>();
+            services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), "http://localhost:5000"));
+            
+            services.AddSignalR(
+                o =>
+                {
+                    o.Hubs.EnableDetailedErrors = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
