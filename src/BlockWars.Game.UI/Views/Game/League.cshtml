@@ -1,0 +1,36 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = @"~/Views/Shared/_Layout.cshtml";
+}
+<div id="gameContainer"></div>
+<script src="/lib/jquery/js/jquery.js"></script>
+<script src="/lib/signalr/jquery.signalr.js"></script>
+<script src="/signalr/hubs"></script>
+<script>
+    if (!String.prototype.supplant) {
+        String.prototype.supplant = function (o) {
+            return this.replace(/{([^{}]*)}/g,
+                function (a, b) {
+                    var r = o[b];
+                    return typeof r === 'string' || typeof r === 'number' ? r : a;
+                }
+            );
+        };
+    }
+
+    $(function () {
+        var gameHub = $.connection.game;
+        var regionTemplate = "<div><p style=\"font-size:30px\">{Name}:</p> <p style=\"color:blue;font-size:30px\">{BlueCount}</p> <p style=\"color:red;font-size:30px\">{RedCount}</p></div>"
+
+        gameHub.client.updateRegionInfo = function (regionInfo) {
+            $("#gameContainer").empty();
+            $.each(regionInfo, function () {
+                $("#gameContainer").append(regionTemplate.supplant(this))
+            })
+        }
+
+        $.connection.hub.start();
+    });
+</script>

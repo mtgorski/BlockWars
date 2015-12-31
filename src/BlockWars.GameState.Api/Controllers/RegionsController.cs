@@ -25,7 +25,8 @@ namespace BlockWars.GameState.Api.Controllers
         {
             //TODO: add validation attributes
             var regions = await _getRegionsService.GetRegionsAsync(leagueId);
-            return Ok(regions);
+            var response = new RegionsResponse { Regions = regions };
+            return Ok(response);
         }
 
         [HttpPut("api/leagues/{leagueId}/regions/{regionId}")]
