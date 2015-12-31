@@ -1,0 +1,27 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "BlockWars.GameState.DemoClient Console Application",
+  "authors": [ "Matt" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+  },
+
+  "commands": {
+    "BlockWars.GameState.DemoClient": "BlockWars.GameState.DemoClient"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+        "BlockWars.GameState.Client": "1.0.0-*"
+      }
+    }
+  }
+}
