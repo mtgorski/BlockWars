@@ -14,7 +14,7 @@ namespace BlockWars.GameState.Api.Repositories
         Task UpsertRegionAsync(Guid regionId, RegionData regionData);
     }
 
-    public class RegionRepository : IRegionRepository, IBuildBlock, IDestroyBlock
+    public class RegionRepository : IRegionRepository, IBuildBlock
     {
         private readonly IMongoCollection<RegionData> _regions;
         private readonly IMongoDatabase _database;
@@ -26,14 +26,9 @@ namespace BlockWars.GameState.Api.Repositories
             _regions = _database.GetCollection<RegionData>("Regions");
         }
 
-        public Task BuildBlockAsync(Guid regionId, BuildRequest request)
+        public Task BuildBlockAsync(Guid regionId)
         {
-            return GetBuiltCollection(regionId, request.Color).InsertOneAsync(new BsonDocument());
-        }
-
-        public Task DestroyBlockAsync(Guid regionId, DestroyRequest request)
-        {
-            return GetDestroyedCollection(regionId, request.Color).InsertOneAsync(new BsonDocument());
+            return GetBuiltCollection(regionId).InsertOneAsync(new BsonDocument());
         }
 
         public async Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId)
@@ -42,26 +37,17 @@ namespace BlockWars.GameState.Api.Repositories
 
             foreach(var region in regions)
             {
-                var blueBuilt = GetBuiltCollection(region.RegionId, BlockColor.Blue).Find(q => true).CountAsync();
-                var blueDestroyed = GetDestroyedCollection(region.RegionId, BlockColor.Blue).Find(q => true).CountAsync();
-                var redBuilt = GetBuiltCollection(region.RegionId, BlockColor.Red).Find(q => true).CountAsync();
-                var redDestroyed = GetDestroyedCollection(region.RegionId, BlockColor.Red).Find(q => true).CountAsync();
+                var built = GetBuiltCollection(region.RegionId).Find(q => true).CountAsync();
 
-                region.BlueCount = await blueBuilt - await blueDestroyed;
-                region.RedCount = await redBuilt - await redDestroyed; 
+                region.BlockCount = await built;
             }
 
             return regions;
         }
 
-        private IMongoCollection<BsonDocument> GetBuiltCollection(Guid regionId, BlockColor color)
+        private IMongoCollection<BsonDocument> GetBuiltCollection(Guid regionId)
         {
-            return _database.GetCollection<BsonDocument>(regionId + "_" + color + "_Built");
-        }
-
-        private IMongoCollection<BsonDocument> GetDestroyedCollection(Guid regionId, BlockColor color)
-        {
-            return _database.GetCollection<BsonDocument>(regionId + "_" + color + "_Destroyed");
+            return _database.GetCollection<BsonDocument>(regionId + "_Built");
         }
 
         public Task UpsertRegionAsync(Guid regionId, RegionData regionData)

@@ -15,8 +15,6 @@ namespace BlockWars.GameState.Client
 
         Task PutRegionAsync(Guid leagueId, Guid regionId, Region region);
 
-        Task BuildBlockAsync(Guid leagueId, Guid regionId, BuildRequest buildRequest);
-        
-        Task DestroyBlockAsync(Guid leagueId, Guid regionId, DestroyRequest destroyRequest);
+        Task BuildBlockAsync(Guid leagueId, Guid regionId);
     }
 }

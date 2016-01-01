@@ -46,19 +46,10 @@ namespace BlockWars.GameState.Client
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task BuildBlockAsync(Guid leagueId, Guid regionId, BuildRequest buildRequest)
+        public async Task BuildBlockAsync(Guid leagueId, Guid regionId)
         {
             var response = await _client.PostAsJsonAsync(
-                _baseUrl + "/api/leagues/" + leagueId + "/regions/" + regionId + "/build_block",
-                buildRequest);
-            response.EnsureSuccessStatusCode();
-        }
-
-        public async Task DestroyBlockAsync(Guid leagueId, Guid regionId, DestroyRequest destroyRequest)
-        {
-            var response = await _client.PostAsJsonAsync(
-                _baseUrl + "/api/leagues/" + leagueId + "/regions/" + regionId + "/destroy_block",
-                destroyRequest);
+                _baseUrl + "/api/leagues/" + leagueId + "/regions/" + regionId + "/build_block", new { });
             response.EnsureSuccessStatusCode();
         }
     }

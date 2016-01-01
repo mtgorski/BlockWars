@@ -8,8 +8,6 @@ namespace BlockWars.GameState.Models
 
         public string Name { get; set; }
 
-        public long RedCount { get; set; }
-
-        public long BlueCount { get; set; }
+        public long BlockCount { get; set; }
     }
 }

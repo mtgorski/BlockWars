@@ -6,6 +6,6 @@ namespace BlockWars.GameState.Api
 {
     public interface IBuildBlock
     {
-        Task BuildBlockAsync(Guid regionId, BuildRequest request);
+        Task BuildBlockAsync(Guid regionId);
     }
 }

@@ -20,7 +20,6 @@ namespace BlockWars.GameState.Api
             services.AddScoped<IGetLeagues, GetLeaguesService>();
             services.AddScoped<IUpsertLeague, UpsertLeagueService>();
             services.AddScoped<IBuildBlock, RegionRepository>();
-            services.AddScoped<IDestroyBlock, RegionRepository>();
             services.AddScoped<IUpsertRegion, UpsertRegionService>();
             services.AddScoped<IGetRegions, GetRegionsService>();
             services.AddScoped<IRegionRepository, RegionRepository>();

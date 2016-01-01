@@ -25,16 +25,7 @@ namespace BlockWars.GameState.DemoClient
                 var regions = await gameClient.GetRegionsAsync(leagueId);
                 var regionSelector = Rng.Next(regions.Count);
                 var whichRegion = regions.Where((x, i) => i == regionSelector).Single();
-                var whichColor = (BlockColor)Rng.Next(2);
-                var whichAction = Rng.Next(2);
-                if(whichAction == 0)
-                {
-                    await gameClient.BuildBlockAsync(leagueId, whichRegion.RegionId, new BuildRequest { Color = whichColor });
-                }
-                else
-                {
-                    await gameClient.DestroyBlockAsync(leagueId, whichRegion.RegionId, new DestroyRequest { Color = whichColor });
-                }
+                await gameClient.BuildBlockAsync(leagueId, whichRegion.RegionId);
             }
         }
     }

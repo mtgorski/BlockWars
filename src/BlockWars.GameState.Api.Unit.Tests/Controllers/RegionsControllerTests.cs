@@ -51,33 +51,15 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             [Frozen] Mock<IBuildBlock> buildBlockService,
             Guid givenLeagueId,
             Guid givenRegionId,
-            BuildRequest givenBuildRequest,
             RegionsController sut)
         {
-            buildBlockService.Setup(m => m.BuildBlockAsync(givenRegionId, givenBuildRequest))
+            buildBlockService.Setup(m => m.BuildBlockAsync(givenRegionId))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            var actual = await sut.BuildBlockAsync(givenLeagueId, givenRegionId, givenBuildRequest);
+            var actual = await sut.BuildBlockAsync(givenLeagueId, givenRegionId);
 
             actual.Should().BeAssignableTo<HttpOkResult>();
             buildBlockService.Verify();
-        }
-
-        [Theory, AutoMoqController]
-        public async Task DestroyBlockAsync_ShouldDestroy(
-            [Frozen] Mock<IDestroyBlock> destroyBlockService,
-            Guid givenLeagueId,
-            Guid givenRegionId,
-            DestroyRequest givenDestroyRequest,
-            RegionsController sut)
-        {
-            destroyBlockService.Setup(m => m.DestroyBlockAsync(givenRegionId, givenDestroyRequest))
-                .Returns(Task.FromResult(0)).Verifiable();
-
-            var actual = await sut.DestroyBlockAsync(givenLeagueId, givenRegionId, givenDestroyRequest);
-
-            actual.Should().BeAssignableTo<HttpOkResult>();
-            destroyBlockService.Verify();
         }
     }
 }
