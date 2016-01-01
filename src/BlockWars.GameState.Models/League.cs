@@ -9,6 +9,8 @@ namespace BlockWars.GameState.Models
     {
         public Guid LeagueId { get; set; }
 
+        public DateTime ExpiresAt { get; set; }
+
         [Required]
         [StringLength(256, MinimumLength = 1)]
         public string Name { get; set; }
