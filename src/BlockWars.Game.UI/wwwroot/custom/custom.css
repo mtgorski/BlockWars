@@ -62,14 +62,12 @@ table {
 }
 
 .btn-info, .btn-info[disabled] {
-  height: 42px;
-  width: 38px;
-  color: #fff;
+  color: #333;
   background-color: #fff;
+  font-size: 14px;
   border: 1px solid white;
-  font-size:32px;
   text-align: center;
-  padding: 0px 6px 8px 6px;
+  padding: 4px 6px 8px 6px;
   opacity: 1;
 }
 

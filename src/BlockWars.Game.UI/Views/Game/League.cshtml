@@ -5,6 +5,7 @@
     Layout = @"~/Views/Shared/_Layout.cshtml";
 }
 <div id="gameContainer"></div>
+<div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
 <script src="/lib/jquery/js/jquery.js"></script>
 <script src="/lib/signalr/jquery.signalr.js"></script>
 <script src="/signalr/hubs"></script>
@@ -20,14 +21,31 @@
         };
     }
 
+    
+
     $(function () {
         var gameHub = $.connection.game;
         var regionTemplate = "<div><p style=\"font-size:30px\">{Name}:</p><p style=\"color:red;font-size:30px\">{BlockCount}</p></div>"
-        
+        var currentGame;
 
-        gameHub.client.updateRegionInfo = function (regionInfo) {
+        function playAgain() {
+            $("#gameOver").hide();
+            currentGame = null;
+        }
+        $("#playAgainButton").click(playAgain);
+        
+        gameHub.client.updateRegionInfo = function (leagueInfo) {
+
+            if (currentGame == null) {
+                currentGame = leagueInfo.League.LeagueId;
+            }
+            if (currentGame != leagueInfo.League.LeagueId) {
+                $("#gameOver").show();
+                return;
+            }
+
             $("#gameContainer").empty();
-            $.each(regionInfo, function () {
+            $.each(leagueInfo.Regions, function () {
                 $("#gameContainer").append(regionTemplate.supplant(this))
             });
         }

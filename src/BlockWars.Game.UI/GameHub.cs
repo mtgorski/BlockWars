@@ -6,6 +6,7 @@ using System.Net.Http;
 using System;
 using System.Threading;
 using BlockWars.GameState.Models;
+using BlockWars.Game.UI.ViewModels;
 
 namespace BlockWars.Game.UI
 {
@@ -66,7 +67,12 @@ namespace BlockWars.Game.UI
             var regions = await httpClient.GetRegionsAsync(currentLeague.LeagueId);
             if(regions.Count > 0)
             {
-                clients.All.updateRegionInfo(regions);
+                var viewModel = new LeagueViewModel
+                {
+                    League = currentLeague,
+                    Regions = regions
+                };
+                clients.All.updateRegionInfo(viewModel);
             }       
         }
 
