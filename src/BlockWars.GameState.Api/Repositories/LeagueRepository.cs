@@ -8,7 +8,7 @@ namespace BlockWars.GameState.Api.Repositories
 {
     public interface ILeagueRepository
     {
-        Task<ICollection<LeagueData>> GetLeaguesAsync();
+        Task<ICollection<LeagueData>> GetLeaguesAsync(IQuery<LeagueData> query);
         Task UpsertLeagueAsync(Guid leagueId, LeagueData league);
     }
 
@@ -23,9 +23,9 @@ namespace BlockWars.GameState.Api.Repositories
             _leagues = database.GetCollection<LeagueData>("Leagues");
         }
 
-        public async Task<ICollection<LeagueData>> GetLeaguesAsync()
+        public async Task<ICollection<LeagueData>> GetLeaguesAsync(IQuery<LeagueData> query)
         {
-            return await _leagues.Find(q => true).ToListAsync();
+            return await _leagues.Find(query.ToFilterDefinition()).ToListAsync();
         }
 
         public Task UpsertLeagueAsync(Guid leagueId, LeagueData league)

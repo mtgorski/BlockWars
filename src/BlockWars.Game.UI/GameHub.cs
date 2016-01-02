@@ -5,6 +5,7 @@ using BlockWars.GameState.Client;
 using System.Net.Http;
 using System;
 using System.Threading;
+using BlockWars.GameState.Models;
 
 namespace BlockWars.Game.UI
 {
@@ -16,10 +17,6 @@ namespace BlockWars.Game.UI
 
         public override async Task OnConnected()
         {
-            var client = new GameStateClient(new HttpClient(), "http://localhost:5000");
-            var regions = await client.GetRegionsAsync(Guid.Parse("5a44f339-3133-4f79-a6dc-1862568569cc"));
-            Clients.Caller.updateRegionInfo(regions);
-
             EnsureTimer();
         }
 
@@ -37,8 +34,40 @@ namespace BlockWars.Game.UI
         private static async Task NotifyClients(IHubCallerConnectionContext<dynamic> clients)
         {
             var httpClient = new GameStateClient(new HttpClient(), "http://localhost:5000");
-            var regions = await httpClient.GetRegionsAsync(Guid.Parse("5a44f339-3133-4f79-a6dc-1862568569cc"));
-            clients.All.updateRegionInfo(regions);
+            var currentLeague = await httpClient.GetCurrentLeagueAsync();
+            if(currentLeague == null)
+            {
+                var nextExpiryTime = DateTime.UtcNow.AddMinutes(1);
+                var roundedExpiryTime = new DateTime(nextExpiryTime.Year, nextExpiryTime.Month, nextExpiryTime.Day, nextExpiryTime.Hour, nextExpiryTime.Minute, 0, DateTimeKind.Utc);
+                var newLeague = new League
+                {
+                    LeagueId = Guid.NewGuid(),
+                    Name = DateTime.UtcNow.ToString(),
+                    Description = "Automatically generated league",
+                    ExpiresAt = roundedExpiryTime
+                };
+
+                await httpClient.PutLeagueAsync(newLeague.LeagueId, newLeague);
+                var region1 = new Region
+                {
+                    Name = "Cats",
+                    RegionId = Guid.NewGuid()
+                };
+                var region2 = new Region
+                {
+                    Name = "Dogs",
+                    RegionId = Guid.NewGuid()
+                };
+                await httpClient.PutRegionAsync(newLeague.LeagueId, region1.RegionId, region1);
+                await httpClient.PutRegionAsync(newLeague.LeagueId, region2.RegionId, region2);
+                return;
+            }
+
+            var regions = await httpClient.GetRegionsAsync(currentLeague.LeagueId);
+            if(regions.Count > 0)
+            {
+                clients.All.updateRegionInfo(regions);
+            }       
         }
 
     }

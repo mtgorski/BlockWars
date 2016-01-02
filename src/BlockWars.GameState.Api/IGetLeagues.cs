@@ -6,6 +6,6 @@ namespace BlockWars.GameState.Api
 {
     public interface IGetLeagues
     {
-        Task<ICollection<League>> GetLeaguesAsync();
+        Task<ICollection<League>> GetLeaguesAsync(LeagueSearchRequest request);
     }
 }

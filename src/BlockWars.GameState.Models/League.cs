@@ -16,5 +16,7 @@ namespace BlockWars.GameState.Models
         [Required]
         [StringLength(256, MinimumLength = 1)]
         public string Description { get; set; }
+
+        public DateTime ExpiresAt { get; set; }
     }
 }

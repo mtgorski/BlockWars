@@ -1,6 +1,7 @@
 ﻿using BlockWars.GameState.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
@@ -18,12 +19,12 @@ namespace BlockWars.GameState.Client
             _baseUrl = baseUrl;
         }
 
-        public async Task<ICollection<League>> GetLeaguesAsync()
+        public async Task<League> GetCurrentLeagueAsync()
         {
-            var response = await _client.GetAsync(_baseUrl + "/api/leagues");
+            var response = await _client.GetAsync(_baseUrl + "/api/leagues?isCurrent=true");
             response.EnsureSuccessStatusCode();
             var leaguesResponse = await response.Content.ReadAsAsync<LeaguesResponse>();
-            return leaguesResponse.Leagues;
+            return leaguesResponse.Leagues.FirstOrDefault();
         }
 
         public async Task PutLeagueAsync(Guid leagueId, League league)

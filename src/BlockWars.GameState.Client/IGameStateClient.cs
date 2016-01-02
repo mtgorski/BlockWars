@@ -7,7 +7,7 @@ namespace BlockWars.GameState.Client
 {
     public interface IGameStateClient
     {
-        Task<ICollection<League>> GetLeaguesAsync();
+        Task<League> GetCurrentLeagueAsync();
 
         Task PutLeagueAsync(Guid leagueId, League league);
 

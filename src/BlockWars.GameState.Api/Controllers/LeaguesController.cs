@@ -18,9 +18,9 @@ namespace BlockWars.GameState.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetLeaguesAsync()
+        public async Task<IActionResult> GetLeaguesAsync(LeagueSearchRequest request)
         {
-            var leagues = await _getLeaguesService.GetLeaguesAsync();
+            var leagues = await _getLeaguesService.GetLeaguesAsync(request);
             var response = new LeaguesResponse { Leagues = leagues };
             return Ok(response);
         }

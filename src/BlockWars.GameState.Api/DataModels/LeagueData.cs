@@ -11,5 +11,7 @@ namespace BlockWars.GameState.Api.DataModels
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public DateTime ExpiresAt { get; set; }
     }
 }

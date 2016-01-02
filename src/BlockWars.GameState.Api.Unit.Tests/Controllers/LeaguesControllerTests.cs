@@ -15,13 +15,14 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
     {
         [Theory, AutoMoqController]
         public async Task GetLeaguesAsync_ShouldReturnListOfLeagues(
-            [Frozen] Mock<IGetLeagues> getLeaguesService, 
+            [Frozen] Mock<IGetLeagues> getLeaguesService,
+            LeagueSearchRequest givenRequest, 
             LeaguesController sut,
             ICollection<League> leagues)
         {
-            getLeaguesService.Setup(m => m.GetLeaguesAsync()).Returns(Task.FromResult(leagues));
+            getLeaguesService.Setup(m => m.GetLeaguesAsync(givenRequest)).Returns(Task.FromResult(leagues));
 
-            var actual = await sut.GetLeaguesAsync();
+            var actual = await sut.GetLeaguesAsync(givenRequest);
 
             actual.Should().BeOfType<HttpOkObjectResult>();
             actual.As<HttpOkObjectResult>().Value.As<LeaguesResponse>().Leagues.Should().BeSameAs(leagues);
