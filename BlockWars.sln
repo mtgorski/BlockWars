@@ -22,6 +22,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BlockWars.Game.UI", "src\Bl
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BlockWars.GameState.DemoClient", "src\BlockWars.GameState.DemoClient\BlockWars.GameState.DemoClient.xproj", "{F933578E-4A09-4B58-9AF8-D84A159D0BAD}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BlockWars.Game.UI.Unit.Tests", "src\BlockWars.Game.UI.Unit.Tests\BlockWars.Game.UI.Unit.Tests.xproj", "{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{F933578E-4A09-4B58-9AF8-D84A159D0BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F933578E-4A09-4B58-9AF8-D84A159D0BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F933578E-4A09-4B58-9AF8-D84A159D0BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,5 +69,6 @@ Global
 		{785BA630-1A60-460E-8417-E8AB8B712791} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
 		{B9F756F6-5E94-4ABC-BEC6-2DCC6EE1C90A} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
 		{F933578E-4A09-4B58-9AF8-D84A159D0BAD} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
+		{60D2AD76-9A0C-4C8B-AB34-D79E17DE6C33} = {35CB6A66-FED9-41D8-B02B-448154855DFB}
 	EndGlobalSection
 EndGlobal
