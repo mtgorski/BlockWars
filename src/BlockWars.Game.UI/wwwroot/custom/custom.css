@@ -13,13 +13,13 @@ label {
   font-size: 18px;
 }
 
-#go-button {
+.build-button {
   border: 3px solid white;
   background-color: #333;
-  height: 150px;
-  width: 150px;
-  border-radius: 150px;
-  font-size: 36px;
+  height: 50px;
+  width: 50px;
+  border-radius: 30px;
+  font-size: 30px;
 }
 
 .cover-heading {
@@ -258,5 +258,3 @@ body {
     width: 700px;
   }
 }
-Status API Training Shop Blog About Pricing
-© 2015 GitHub, Inc. Terms Privacy Security Contact Help

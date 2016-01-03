@@ -16,6 +16,12 @@ namespace BlockWars.Game.UI
         private static Timer _timer;
         private static readonly object _lock = new object();
 
+        public async Task BuildBlockAsync(string leagueId, string regionId)
+        {
+            var httpClient = new GameStateClient(new HttpClient(), "http://localhost:5000");
+            await httpClient.BuildBlockAsync(Guid.Parse(leagueId), Guid.Parse(regionId));
+        }
+
         public override async Task OnConnected()
         {
             EnsureTimer();

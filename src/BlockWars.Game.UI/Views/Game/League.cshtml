@@ -10,26 +10,14 @@
 <script src="/lib/signalr/jquery.signalr.js"></script>
 <script src="/signalr/hubs"></script>
 <script>
-    if (!String.prototype.supplant) {
-        String.prototype.supplant = function (o) {
-            return this.replace(/{([^{}]*)}/g,
-                function (a, b) {
-                    var r = o[b];
-                    return typeof r === 'string' || typeof r === 'number' ? r : a;
-                }
-            );
-        };
-    }
-
-    
 
     $(function () {
         var gameHub = $.connection.game;
-        var regionTemplate = "<div><p style=\"font-size:30px\">{Name}:</p><p style=\"color:red;font-size:30px\">{BlockCount}</p></div>"
         var currentGame;
 
         function playAgain() {
             $("#gameOver").hide();
+            $("#gameContainer").empty();
             currentGame = null;
         }
         $("#playAgainButton").click(playAgain);
@@ -41,12 +29,27 @@
             }
             if (currentGame != leagueInfo.League.LeagueId) {
                 $("#gameOver").show();
+                $("#gameContainer .build-button").prop('disabled', true).off('click');
                 return;
             }
 
-            $("#gameContainer").empty();
+            
             $.each(leagueInfo.Regions, function () {
-                $("#gameContainer").append(regionTemplate.supplant(this))
+                if ($("#" + this.RegionId).length === 0) {
+                    var $newElement = $('<div>', { 'id': this.RegionId });
+                    var $name = $('<div>', { 'class': 'region-name', 'style': 'font-size:30px' }).text(this.Name + "     ");
+                    var regionId = this.RegionId;
+                    var $click = $('<button>', { 'class': 'build-button' }).text('+').click(function () {
+                        gameHub.server.buildBlockAsync(currentGame, regionId);
+                    });
+                    $name.append($click);
+                    $newElement.append($name);
+                    var $blockCount = $('<p>', { 'class': 'region-count', 'style': 'color:red;font-size:30px' }).text(this.BlockCount);
+                    $newElement.append($blockCount);
+                    $("#gameContainer").append($newElement);
+                }
+                var regionSelector = "#" + this.RegionId;
+                $(regionSelector + " .region-count").text(this.BlockCount);
             });
         }
 
