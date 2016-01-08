@@ -50,11 +50,11 @@ namespace BlockWars.Game.UI
             }
         }
 
-        public void BuildBlock(Guid regionId)
+        public void BuildBlock(string regionName)
         {
             if(_gameState.IsTheCurrentGame)
             {
-                _gameState.BuildBlock(regionId);
+                _gameState.BuildBlock(regionName);
             }
         }
     }

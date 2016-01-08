@@ -110,13 +110,13 @@ namespace BlockWars.Game.UI.Unit.Tests
         [Theory, AutoMoq]
         public void BuildBlock_GivenTheGameStateIsCurrent_ShouldBuildBlock(
             [Frozen]Mock<IGameState> gameState,
-            Guid regionId,
+            string regionName,
             GameManager sut)
         {
             gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
-            gameState.Setup(m => m.BuildBlock(regionId)).Verifiable();
+            gameState.Setup(m => m.BuildBlock(regionName)).Verifiable();
 
-            sut.BuildBlock(regionId);
+            sut.BuildBlock(regionName);
 
             gameState.Verify();
         }
@@ -124,14 +124,14 @@ namespace BlockWars.Game.UI.Unit.Tests
         [Theory, AutoMoq]
         public void BuildBlock_GivenTheGameStateIsNotCurrent_ShouldNotBuildBlock(
             [Frozen]Mock<IGameState> gameState,
-            Guid regionId,
+            string regionName,
             GameManager sut)
         {
             gameState.Setup(m => m.IsTheCurrentGame).Returns(false);
 
-            sut.BuildBlock(regionId);
+            sut.BuildBlock(regionName);
 
-            gameState.Verify(m => m.BuildBlock(It.IsAny<Guid>()), Times.Never);
+            gameState.Verify(m => m.BuildBlock(regionName), Times.Never);
         }
     }
 }
