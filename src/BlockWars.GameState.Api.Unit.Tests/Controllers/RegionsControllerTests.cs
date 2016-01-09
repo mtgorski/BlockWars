@@ -6,7 +6,6 @@ using Moq;
 using Ploeh.AutoFixture.Xunit2;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -46,20 +45,5 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             upsertRegionService.Verify();
         }
 
-        [Theory, AutoMoqController]
-        public async Task BuildBlockAsync_ShouldBuild(
-            [Frozen] Mock<IBuildBlock> buildBlockService,
-            Guid givenLeagueId,
-            Guid givenRegionId,
-            RegionsController sut)
-        {
-            buildBlockService.Setup(m => m.BuildBlockAsync(givenRegionId))
-                .Returns(Task.FromResult(0)).Verifiable();
-
-            var actual = await sut.BuildBlockAsync(givenLeagueId, givenRegionId);
-
-            actual.Should().BeAssignableTo<HttpOkResult>();
-            buildBlockService.Verify();
-        }
     }
 }

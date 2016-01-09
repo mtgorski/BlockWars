@@ -14,7 +14,7 @@ namespace BlockWars.GameState.Api.Repositories
         Task UpsertRegionAsync(Guid regionId, RegionData regionData);
     }
 
-    public class RegionRepository : IRegionRepository, IBuildBlock
+    public class RegionRepository : IRegionRepository
     {
         private readonly IMongoCollection<RegionData> _regions;
         private readonly IMongoDatabase _database;
@@ -26,28 +26,9 @@ namespace BlockWars.GameState.Api.Repositories
             _regions = _database.GetCollection<RegionData>("Regions");
         }
 
-        public Task BuildBlockAsync(Guid regionId)
-        {
-            return GetBuiltCollection(regionId).InsertOneAsync(new BsonDocument());
-        }
-
         public async Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId)
         {
-            var regions = await _regions.Find(x => x.LeagueId == leagueId).ToListAsync();
-
-            foreach(var region in regions)
-            {
-                var built = GetBuiltCollection(region.RegionId).Find(q => true).CountAsync();
-
-                region.BlockCount = await built;
-            }
-
-            return regions;
-        }
-
-        private IMongoCollection<BsonDocument> GetBuiltCollection(Guid regionId)
-        {
-            return _database.GetCollection<BsonDocument>(regionId + "_Built");
+            return await _regions.Find(x => x.LeagueId == leagueId).ToListAsync();
         }
 
         public Task UpsertRegionAsync(Guid regionId, RegionData regionData)

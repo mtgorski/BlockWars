@@ -9,13 +9,11 @@ namespace BlockWars.GameState.Api.Controllers
     {
         private readonly IGetRegions _getRegionsService;
         private readonly IUpsertRegion _upsertRegionService;
-        private readonly IBuildBlock _buildBlockService;
 
-        public RegionsController(IGetRegions getRegionsService, IUpsertRegion upsertRegionService, IBuildBlock buildBlockService)
+        public RegionsController(IGetRegions getRegionsService, IUpsertRegion upsertRegionService)
         {
             _getRegionsService = getRegionsService;
             _upsertRegionService = upsertRegionService;
-            _buildBlockService = buildBlockService;
         }
 
         [HttpGet("api/leagues/{leagueId}/regions")]
@@ -32,14 +30,6 @@ namespace BlockWars.GameState.Api.Controllers
         {
             //TODO: add validation attributes
             await _upsertRegionService.UpsertRegionAsync(leagueId, regionId, region);
-            return Ok();
-        }
-
-        [HttpPost("api/leagues/{leagueId}/regions/{regionId}/build_block")]
-        public async Task<IActionResult> BuildBlockAsync(Guid leagueId, Guid regionId)
-        {
-            //TODO: add validation attributes
-            await _buildBlockService.BuildBlockAsync(regionId);
             return Ok();
         }
 

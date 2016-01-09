@@ -15,27 +15,10 @@ namespace BlockWars.GameState.DemoClient
             Console.ReadKey();
         }
 
-        public static async Task Run()
+        public static Task Run()
         {
-            var gameClient = new GameStateClient(new System.Net.Http.HttpClient(), "http://localhost:5000");
-            while (true)
-            {
-                var league = await gameClient.GetCurrentLeagueAsync();
-                if(league == null)
-                {
-                    continue;
-                }
-                var leagueId = league.LeagueId;
-
-                var regions = await gameClient.GetRegionsAsync(leagueId);
-                if(regions.Count == 0)
-                {
-                    continue;
-                }
-                var regionSelector = Rng.Next(regions.Count);
-                var whichRegion = regions.Where((x, i) => i == regionSelector).Single();
-                await gameClient.BuildBlockAsync(leagueId, whichRegion.RegionId);
-            }
+            //TODO: rewrite to work with new in memory state
+            return Task.FromResult(0);
         }
     }
 }

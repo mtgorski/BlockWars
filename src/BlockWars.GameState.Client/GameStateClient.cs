@@ -46,12 +46,5 @@ namespace BlockWars.GameState.Client
             var response = await _client.PutAsync(_baseUrl + "/api/leagues/" + leagueId + "/regions/" + regionId, region, new JsonMediaTypeFormatter());
             response.EnsureSuccessStatusCode();
         }
-
-        public async Task BuildBlockAsync(Guid leagueId, Guid regionId)
-        {
-            var response = await _client.PostAsJsonAsync(
-                _baseUrl + "/api/leagues/" + leagueId + "/regions/" + regionId + "/build_block", new { });
-            response.EnsureSuccessStatusCode();
-        }
     }
 }
