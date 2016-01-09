@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlockWars.GameState.Models;
 using MongoDB.Driver;
-using MongoDB.Bson;
 
 namespace BlockWars.GameState.Api.Repositories
 {

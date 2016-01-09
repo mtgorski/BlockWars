@@ -12,7 +12,6 @@ namespace BlockWars.GameState.Api.DataModels
 
         public string Name { get; set; }
 
-        [BsonIgnore]
         public long BlockCount { get; set; }
     }
 }
