@@ -2,7 +2,6 @@
 using BlockWars.GameState.Client;
 using System.Threading.Tasks;
 using BlockWars.GameState.Models;
-using System;
 
 namespace BlockWars.Game.UI
 {

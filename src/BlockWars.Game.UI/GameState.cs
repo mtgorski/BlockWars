@@ -19,7 +19,13 @@ namespace BlockWars.Game.UI
     {
         private readonly League _league;
 
-        public bool IsTheCurrentGame { get; set; }
+        public bool IsTheCurrentGame
+        {
+            get
+            {
+                return _league.ExpiresAt > DateTime.UtcNow;
+            }
+        }
 
         public ConcurrentDictionary<string, Region> Regions { get; private set; }
 

@@ -6,80 +6,114 @@ using System.Net.Http;
 using System;
 using System.Threading;
 using BlockWars.GameState.Models;
-using BlockWars.Game.UI.ViewModels;
+using System.Collections.Generic;
 
 namespace BlockWars.Game.UI
 {
     [HubName("game")]
     public class GameHub : Hub
     {
-        private static Timer _timer;
+        private static GameManager _currentGameManager = GetManager();
+        private static IHubCallerConnectionContext<dynamic> _clients;
         private static readonly object _lock = new object();
+        private static Timer _timer;
 
-        public async Task BuildBlockAsync(string leagueId, string regionId)
-        {
-            var httpClient = new GameStateClient(new HttpClient(), "http://localhost:5000");
-            await httpClient.BuildBlockAsync(Guid.Parse(leagueId), Guid.Parse(regionId));
-        }
-
-        public override async Task OnConnected()
-        {
-            EnsureTimer();
-        }
-
-        private void EnsureTimer()
+        public override Task OnConnected()
         {
             lock(_lock)
             {
-                if (_timer == null)
+                if(_clients == null)
                 {
-                    _timer = new Timer(async _ => await NotifyClients(Clients), null, 0, 500);
+                    _clients = Clients;
+                    NotifyLoop();
                 }
             }
+            return Task.FromResult(0);
         }
 
-        private static async Task NotifyClients(IHubCallerConnectionContext<dynamic> clients)
+        public void BuildBlock(string regionName)
+        {
+            _currentGameManager.BuildBlock(regionName);
+        }
+
+        private static GameManager GetManager()
         {
             var httpClient = new GameStateClient(new HttpClient(), "http://localhost:5000");
-            var currentLeague = await httpClient.GetCurrentLeagueAsync();
-            if(currentLeague == null)
+            var league = httpClient.GetCurrentLeagueAsync().Result;
+            ICollection<Region> regions = new List<Region>();
+            if (league == null)
             {
-                var nextExpiryTime = DateTime.UtcNow.AddMinutes(1);
-                var roundedExpiryTime = new DateTime(nextExpiryTime.Year, nextExpiryTime.Month, nextExpiryTime.Day, nextExpiryTime.Hour, nextExpiryTime.Minute, 0, DateTimeKind.Utc);
-                var newLeague = new League
-                {
-                    LeagueId = Guid.NewGuid(),
-                    Name = DateTime.UtcNow.ToString(),
-                    Description = "Automatically generated league",
-                    ExpiresAt = roundedExpiryTime
-                };
+                var manager = GetManagerForNewGame();
+                return manager;
+            }
+            else
+            {
+                regions = httpClient.GetRegionsAsync(league.LeagueId).Result;
+            }
+            var gameState = new GameState(league);
+            
 
-                await httpClient.PutLeagueAsync(newLeague.LeagueId, newLeague);
-                var region1 = new Region
-                {
-                    Name = "Cats",
-                    RegionId = Guid.NewGuid()
-                };
-                var region2 = new Region
-                {
-                    Name = "Dogs",
-                    RegionId = Guid.NewGuid()
-                };
-                await httpClient.PutRegionAsync(newLeague.LeagueId, region1.RegionId, region1);
-                await httpClient.PutRegionAsync(newLeague.LeagueId, region2.RegionId, region2);
-                return;
+            return new GameManager(gameState, httpClient);
+        }
+
+        private static GameManager GetManagerForNewGame()
+        {
+            var httpClient = new GameStateClient(new HttpClient(), "http://localhost:5000");
+            ICollection<Region> regions = new List<Region>();
+            var nextExpiryTime = DateTime.UtcNow.AddMinutes(1);
+            var roundedExpiryTime = new DateTime(nextExpiryTime.Year, nextExpiryTime.Month, nextExpiryTime.Day, nextExpiryTime.Hour, nextExpiryTime.Minute, 0, DateTimeKind.Utc);
+            var league = new League
+            {
+                LeagueId = Guid.NewGuid(),
+                Name = DateTime.UtcNow.ToString(),
+                Description = "Automatically generated league",
+                ExpiresAt = roundedExpiryTime
+            };
+
+            httpClient.PutLeagueAsync(league.LeagueId, league).Wait();
+
+            var region1 = new Region
+            {
+                Name = "Cats",
+                RegionId = Guid.NewGuid()
+            };
+            var region2 = new Region
+            {
+                Name = "Dogs",
+                RegionId = Guid.NewGuid()
+            };
+            regions.Add(region1);
+            regions.Add(region2);
+            httpClient.PutRegionAsync(league.LeagueId, region1.RegionId, region1).Wait();
+            httpClient.PutRegionAsync(league.LeagueId, region2.RegionId, region2).Wait();
+
+            var gameState = new GameState(league);
+            foreach (var region in regions)
+            {
+                gameState.AddRegion(region);
             }
 
-            var regions = await httpClient.GetRegionsAsync(currentLeague.LeagueId);
-            if(regions.Count > 0)
+            return new GameManager(gameState, httpClient);
+        }
+
+        private static void NotifyLoop()
+        {
+            var viewModel = _currentGameManager.GetCurrentLeague();
+            if(viewModel != null)
             {
-                var viewModel = new LeagueViewModel
+                if (_clients != null)
                 {
-                    League = currentLeague,
-                    Regions = regions
-                };
-                clients.All.updateRegionInfo(viewModel);
-            }       
+                    _clients.All.updateRegionInfo(viewModel);
+                }
+            }
+            else
+            {
+                _currentGameManager.SaveGameAsync().GetAwaiter().GetResult();
+                _currentGameManager = GetManagerForNewGame();
+            }
+            
+
+            _timer = new Timer(_ => NotifyLoop(), null, 16, Timeout.Infinite);
         }
 
     }

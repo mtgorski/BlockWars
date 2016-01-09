@@ -38,9 +38,9 @@
                 if ($("#" + this.RegionId).length === 0) {
                     var $newElement = $('<div>', { 'id': this.RegionId });
                     var $name = $('<div>', { 'class': 'region-name', 'style': 'font-size:30px' }).text(this.Name + "     ");
-                    var regionId = this.RegionId;
+                    var name = this.Name;
                     var $click = $('<button>', { 'class': 'build-button' }).text('+').click(function () {
-                        gameHub.server.buildBlockAsync(currentGame, regionId);
+                        gameHub.server.buildBlock(name);
                     });
                     $name.append($click);
                     $newElement.append($name);
