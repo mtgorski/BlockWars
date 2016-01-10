@@ -26,7 +26,7 @@ namespace BlockWars.Game.UI
             Guid leagueId;
             if(Guid.TryParse(leagueIdInput, out leagueId))
             {
-                _serverManager.CurrentGameManager.BuildBlock(leagueId, regionName);
+                _serverManager.BuildBlock(leagueId, regionName);
             }
         }
 

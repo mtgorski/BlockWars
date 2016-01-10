@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNet.SignalR.Hubs;
 using System.Threading;
 using System.Threading.Tasks;
+using BlockWars.GameState.Models;
+using System;
+using BlockWars.Game.UI.ViewModels;
 
 namespace BlockWars.Game.UI
 {
@@ -68,6 +71,21 @@ namespace BlockWars.Game.UI
                 await Task.Delay(15);
             }
 
+        }
+
+        public void BuildBlock(Guid leagueId, string regionName)
+        {
+            CurrentGameManager?.BuildBlock(leagueId, regionName);
+        }
+
+        public void AddRegion(Guid leagueId, Region regionName)
+        {
+            CurrentGameManager?.AddRegion(leagueId, regionName);
+        }
+
+        public LeagueViewModel GetCurrentLeagueView()
+        {
+            return CurrentGameManager?.GetCurrentLeague();
         }
     }
 }
