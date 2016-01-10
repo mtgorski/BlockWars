@@ -83,13 +83,15 @@ namespace BlockWars.Game.UI.Unit.Tests
         [Theory, AutoMoq]
         public void AddRegion_GivenTheGameStateIsCurrent_ShouldAddRegion(
             [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
             Region givenRegion,
             GameManager sut)
         {
             gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
             gameState.Setup(m => m.AddRegion(givenRegion)).Verifiable();
 
-            sut.AddRegion(givenRegion);
+            sut.AddRegion(currentLeagueId, givenRegion);
 
             gameState.Verify();
         }
@@ -97,26 +99,87 @@ namespace BlockWars.Game.UI.Unit.Tests
         [Theory, AutoMoq]
         public void AddRegion_GivenTheGameStateIsNotCurrent_ShouldNotAddRegion(
             [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
             Region givenRegion,
             GameManager sut)
         {
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
             gameState.Setup(m => m.IsTheCurrentGame).Returns(false);
 
-            sut.AddRegion(givenRegion);
+            try
+            {
+                sut.AddRegion(currentLeagueId, givenRegion);
+            }
+            catch(InvalidOperationException)
+            {}
 
             gameState.Verify(m => m.AddRegion(It.IsAny<Region>()), Times.Never);
         }
 
         [Theory, AutoMoq]
+        public void AddRegion_GivenTheGameStateIsNotCurrent_ShouldThrowInvalidOperationException(
+            [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
+            Region givenRegion,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(false);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
+
+            Action action = () => sut.AddRegion(currentLeagueId, givenRegion);
+
+            action.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Theory, AutoMoq]
+        public void AddRegion_GivenAnInvalidLeagueId_ShouldNotAddRegion(
+            [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
+            Guid givenLeagueId,
+            Region givenRegion,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
+
+            try
+            {
+                sut.AddRegion(givenLeagueId, givenRegion);
+            }
+            catch(ArgumentException)
+            { }
+
+            gameState.Verify(m => m.AddRegion(It.IsAny<Region>()), Times.Never);
+        }
+
+        [Theory, AutoMoq]
+        public void AddRegion_GivenAnInvalidLeagueId_ShouldThrowArgumentException(
+            [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
+            Guid givenLeagueId,
+            Region givenRegion,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
+
+            Action action = () => sut.AddRegion(givenLeagueId, givenRegion);
+
+            action.ShouldThrow<ArgumentException>();
+        }
+
+        [Theory, AutoMoq]
         public void BuildBlock_GivenTheGameStateIsCurrent_ShouldBuildBlock(
             [Frozen]Mock<IGameState> gameState,
+            Guid leagueId,
             string regionName,
             GameManager sut)
         {
             gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(leagueId);
             gameState.Setup(m => m.BuildBlock(regionName)).Verifiable();
 
-            sut.BuildBlock(regionName);
+            sut.BuildBlock(leagueId, regionName);
 
             gameState.Verify();
         }
@@ -124,14 +187,73 @@ namespace BlockWars.Game.UI.Unit.Tests
         [Theory, AutoMoq]
         public void BuildBlock_GivenTheGameStateIsNotCurrent_ShouldNotBuildBlock(
             [Frozen]Mock<IGameState> gameState,
+            Guid leagueId,
             string regionName,
             GameManager sut)
         {
             gameState.Setup(m => m.IsTheCurrentGame).Returns(false);
+            gameState.Setup(m => m.LeagueId).Returns(leagueId);
 
-            sut.BuildBlock(regionName);
+            try
+            {
+                sut.BuildBlock(leagueId, regionName);
+            }
+            catch(InvalidOperationException)
+            { }
 
             gameState.Verify(m => m.BuildBlock(regionName), Times.Never);
+        }
+
+        [Theory, AutoMoq]
+        public void BuildBlock_GivenTheGameStateIsNotCurrent_ShouldThrowInvalidOperationException(
+            [Frozen]Mock<IGameState> gameState,
+            Guid leagueId,
+            string regionName,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(false);
+            gameState.Setup(m => m.LeagueId).Returns(leagueId);
+
+            Action action = () => sut.BuildBlock(leagueId, regionName);
+
+            action.ShouldThrow<InvalidOperationException>();
+        }
+
+        [Theory, AutoMoq]
+        public void BuildBlock_GivenTheWrongLeagueId_ShouldNotBuildBlock(
+            [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
+            Guid givenLeagueId,
+            string regionName,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
+
+            try
+            {
+                sut.BuildBlock(givenLeagueId, regionName);
+            }
+            catch(ArgumentException)
+            { }
+
+            gameState.Verify(m => m.BuildBlock(regionName), Times.Never);
+        }
+
+        [Theory, AutoMoq]
+        public void BuildBlock_GivenTheWrongLeagueId_ShouldThrowArgumentException(
+            [Frozen]Mock<IGameState> gameState,
+            Guid currentLeagueId,
+            Guid givenLeagueId,
+            string regionName,
+            GameManager sut)
+        {
+            gameState.Setup(m => m.IsTheCurrentGame).Returns(true);
+            gameState.Setup(m => m.LeagueId).Returns(currentLeagueId);
+
+            Action action = () => sut.BuildBlock(givenLeagueId, regionName);
+
+            action.ShouldThrow<ArgumentException>();
         }
     }
 }

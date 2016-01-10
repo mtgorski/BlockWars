@@ -2,6 +2,7 @@
 using BlockWars.GameState.Client;
 using System.Threading.Tasks;
 using BlockWars.GameState.Models;
+using System;
 
 namespace BlockWars.Game.UI
 {
@@ -41,19 +42,35 @@ namespace BlockWars.Game.UI
             }
         }
 
-        public void AddRegion(Region region)
+        public void AddRegion(Guid leagueId, Region region)
         {
-            if(_gameState.IsTheCurrentGame)
+            ValidateLeagueId(leagueId);
+            ValidateGameIsNotExpired("Cannot add a region to an expired game.");
+            _gameState.AddRegion(region);
+        }
+
+        public void BuildBlock(Guid leagueId, string regionName)
+        {
+            ValidateLeagueId(leagueId);
+            ValidateGameIsNotExpired("Cannot build a block when the game has expired.");
+
+            _gameState.BuildBlock(regionName);
+        }
+
+        private void ValidateGameIsNotExpired(string message)
+        {
+            if (!_gameState.IsTheCurrentGame)
             {
-                _gameState.AddRegion(region);
+                throw new InvalidOperationException(message);
             }
         }
 
-        public void BuildBlock(string regionName)
+        private void ValidateLeagueId(Guid leagueId)
         {
-            if(_gameState.IsTheCurrentGame)
+            if (leagueId != _gameState.LeagueId)
             {
-                _gameState.BuildBlock(regionName);
+                var leagueIdName = nameof(leagueId);
+                throw new ArgumentException($"{leagueIdName} is not the leagueId of the current league.");
             }
         }
     }

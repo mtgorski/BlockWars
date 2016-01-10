@@ -40,7 +40,7 @@
                     var $name = $('<div>', { 'class': 'region-name', 'style': 'font-size:30px' }).text(this.Name + "     ");
                     var name = this.Name;
                     var $click = $('<button>', { 'class': 'build-button' }).text('+').click(function () {
-                        gameHub.server.buildBlock(name);
+                        gameHub.server.buildBlock(currentGame, name);
                     });
                     $name.append($click);
                     $newElement.append($name);

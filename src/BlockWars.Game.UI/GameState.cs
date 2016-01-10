@@ -2,7 +2,6 @@
 using BlockWars.Game.UI.ViewModels;
 using BlockWars.GameState.Models;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace BlockWars.Game.UI
@@ -10,6 +9,8 @@ namespace BlockWars.Game.UI
     public interface IGameState
     {
         bool IsTheCurrentGame { get; }
+        Guid LeagueId { get; }
+
         LeagueViewModel ToView();
         void AddRegion(Region region);
         void BuildBlock(string regionName);
@@ -26,6 +27,8 @@ namespace BlockWars.Game.UI
                 return _league.ExpiresAt > DateTime.UtcNow;
             }
         }
+
+        public Guid LeagueId { get { return _league.LeagueId; } }
 
         public ConcurrentDictionary<string, Region> Regions { get; private set; }
 

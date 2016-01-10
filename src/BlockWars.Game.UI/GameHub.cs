@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using System;
 
 namespace BlockWars.Game.UI
 {
@@ -15,9 +16,13 @@ namespace BlockWars.Game.UI
             return Task.FromResult(0);
         }
 
-        public void BuildBlock(string regionName)
+        public void BuildBlock(string leagueIdInput, string regionName)
         {
-            _serverManager.CurrentGameManager.BuildBlock(regionName);
+            Guid leagueId;
+            if(Guid.TryParse(leagueIdInput, out leagueId))
+            {
+                _serverManager.CurrentGameManager.BuildBlock(leagueId, regionName);
+            }
         }
 
     }
