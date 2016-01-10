@@ -1,6 +1,7 @@
 ﻿using BlockWars.GameState.Client;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BlockWars.GameState.DemoClient
@@ -11,14 +12,18 @@ namespace BlockWars.GameState.DemoClient
 
         public static void Main(string[] args)
         {
-            Run().GetAwaiter().GetResult();
+            //Run().GetAwaiter().GetResult();
             Console.ReadKey();
         }
 
-        public static Task Run()
+        public async static Task Run()
         {
-            //TODO: rewrite to work with new in memory state
-            return Task.FromResult(0);
+            var client = new HttpClient();
+            while(true)
+            {
+               var response = await client.PostAsync("http://localhost:49873/api/demo/build_block", new StringContent("content"));
+                response.EnsureSuccessStatusCode();
+            }
         }
     }
 }

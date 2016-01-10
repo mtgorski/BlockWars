@@ -2,6 +2,8 @@
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Net.Http;
 
@@ -9,7 +11,6 @@ namespace BlockWars.Game.UI
 {
     public class Startup
     {
-        public static IServiceProvider ServiceProvider { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
@@ -22,26 +23,27 @@ namespace BlockWars.Game.UI
             services.AddTransient<INewInstanceFactory, NewInstanceFactory>();
             services.AddTransient<INewLeagueStrategy, HardCodedLeagueStrategy>();
             services.AddTransient<INewRegionsStrategy, HardCodedRegionsStrategy>();
-            services.AddSingleton<ServerManager>();
+            services.AddSingleton<IServerManager, ServerManager>();
+
 
             services.AddSignalR(
                 o =>
                 {
                     o.Hubs.EnableDetailedErrors = true;
                 });
-
-            ServiceProvider = services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app,
+                              IHostingEnvironment env,
+                              ILoggerFactory loggerFactory)
         {
-            
+            app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
-            app.UseMvc();
+            
             app.UseIISPlatformHandler();
-
             app.UseSignalR();
+            app.UseMvc();
         }
 
         // Entry point for the application.

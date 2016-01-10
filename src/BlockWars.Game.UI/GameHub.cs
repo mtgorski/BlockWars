@@ -8,7 +8,12 @@ namespace BlockWars.Game.UI
     [HubName("game")]
     public class GameHub : Hub
     {
-        private readonly ServerManager _serverManager = (ServerManager)Startup.ServiceProvider.GetService(typeof(ServerManager));
+        private readonly IServerManager _serverManager;
+
+        public GameHub(IServerManager serverManager)
+        {
+            _serverManager = serverManager;
+        }
 
         public override Task OnConnected()
         {

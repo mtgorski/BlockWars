@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace BlockWars.Game.UI
 {
-    public class ServerManager
+    public class ServerManager : IServerManager
     {
         private readonly object _gameLoopLock = new object();
         private Task _gameLoop;
