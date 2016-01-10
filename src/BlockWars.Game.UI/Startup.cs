@@ -1,10 +1,9 @@
 ﻿using BlockWars.GameState.Client;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
-using System;
 using System.Net.Http;
 
 namespace BlockWars.Game.UI
@@ -17,8 +16,15 @@ namespace BlockWars.Game.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             services.AddSingleton<HttpClient>();
-            services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), "http://localhost:5000"));
+
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("urls.json");
+            var config = configurationBuilder.Build();
+            var gameStateUrl = config.GetSection("urls")["GameStateApi"];
+
+            services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), gameStateUrl));
             services.AddTransient<IGameManagerProvider, GameManagerProvider>();
             services.AddTransient<INewInstanceFactory, NewInstanceFactory>();
             services.AddTransient<INewLeagueStrategy, HardCodedLeagueStrategy>();
