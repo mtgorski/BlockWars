@@ -5,6 +5,8 @@
   },
 
   "dependencies": {
+    "Akka": "1.0.5",
+    "Akka.DI.Core": "1.0.5",
     "BlockWars.GameState.Client": "1.0.0-*",
     "BlockWars.GameState.Models": "1.0.0-*",
     "Microsoft.AspNet.Diagnostics": "1.0.0-rc1-final",

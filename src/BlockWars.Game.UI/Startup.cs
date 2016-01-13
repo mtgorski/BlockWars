@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
+using System;
+using BlockWars.Game.UI.Actors;
 
 namespace BlockWars.Game.UI
 {
@@ -21,22 +23,46 @@ namespace BlockWars.Game.UI
 
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile("urls.json");
+            configurationBuilder.AddJsonFile("appsettings.json");
             var config = configurationBuilder.Build();
             var gameStateUrl = config.GetSection("urls")["GameStateApi"];
 
             services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), gameStateUrl));
-            services.AddTransient<IGameManagerProvider, GameManagerProvider>();
-            services.AddTransient<INewInstanceFactory, NewInstanceFactory>();
             services.AddTransient<INewLeagueStrategy, HardCodedLeagueStrategy>();
             services.AddTransient<INewRegionsStrategy, HardCodedRegionsStrategy>();
-            services.AddSingleton<IServerManager, ServerManager>();
-
 
             services.AddSignalR(
                 o =>
                 {
                     o.Hubs.EnableDetailedErrors = true;
                 });
+
+            if (bool.Parse(config.GetSection("Implementation")["UseAkka"]))
+            {
+                ConfigureAkka(services);
+            }
+            else
+            {
+                ConfigureDefaultServices(services);
+            }
+            
+
+            
+        }
+
+        private void ConfigureAkka(IServiceCollection services)
+        {
+            services.AddSingleton<IServerManager, AkkaAdapter>();
+            services.AddTransient<LeagueActor, LeagueActor>();
+            services.AddTransient<ServerSupervisor, ServerSupervisor>();
+            services.AddTransient<LoopPinger, LoopPinger>();
+        }
+
+        private static void ConfigureDefaultServices(IServiceCollection services)
+        {
+            services.AddTransient<IGameManagerProvider, GameManagerProvider>();
+            services.AddTransient<INewInstanceFactory, NewInstanceFactory>();
+            services.AddSingleton<IServerManager, ServerManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
