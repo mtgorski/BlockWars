@@ -55,7 +55,8 @@ namespace BlockWars.Game.UI
             services.AddSingleton<IServerManager, AkkaAdapter>();
             services.AddTransient<LeagueActor, LeagueActor>();
             services.AddTransient<ServerSupervisor, ServerSupervisor>();
-            services.AddTransient<LoopPinger, LoopPinger>();
+            services.AddTransient<Broadcaster, Broadcaster>();
+            
         }
 
         private static void ConfigureDefaultServices(IServiceCollection services)

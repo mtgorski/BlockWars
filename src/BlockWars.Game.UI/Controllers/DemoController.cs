@@ -19,9 +19,12 @@ namespace BlockWars.Game.UI.Controllers
         public IActionResult BuildBlock()
         {
             var currentLeague = _serverManager.GetCurrentLeagueView();
-            var whichRegionIndex = Rng.Next(currentLeague.Regions.Count);
-            var whichRegion = currentLeague.Regions.Where((_, i) => i == whichRegionIndex).Single();
-            _serverManager.BuildBlock(currentLeague.League.LeagueId, whichRegion.Name);
+            if(currentLeague != null)
+            {
+                var whichRegionIndex = Rng.Next(currentLeague.Regions.Count);
+                var whichRegion = currentLeague.Regions.Where((_, i) => i == whichRegionIndex).Single();
+                _serverManager.BuildBlock(currentLeague.League.LeagueId, whichRegion.Name);
+            }
             
             return Ok();
         }

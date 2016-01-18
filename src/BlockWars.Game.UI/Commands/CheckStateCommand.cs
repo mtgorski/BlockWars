@@ -1,8 +1,8 @@
 ﻿namespace BlockWars.Game.UI.Actors
 {
-    public class EndLeagueCommand
+    internal class CheckStateCommand
     {
-        public EndLeagueCommand()
+        public CheckStateCommand()
         {
         }
     }

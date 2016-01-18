@@ -8,7 +8,6 @@ using BlockWars.Game.UI.Actors;
 using Akka.DI.Core;
 using BlockWars.Game.UI.IoC;
 using BlockWars.Game.UI.Commands;
-using Akka.Event;
 
 namespace BlockWars.Game.UI
 {
@@ -20,16 +19,17 @@ namespace BlockWars.Game.UI
     {
         private readonly IActorRef _serverSupervisor;
         private readonly ActorSystem _actorSystem;
-        private bool _gameLoopEnsured;
         private readonly object _lock = new object();
-        private IActorRef _loopPinger;
+        private readonly IActorRef _broadcaster;
+
 
         public AkkaAdapter(IServiceProvider serviceProvider)
+
         {
             _actorSystem = ActorSystem.Create("BlockWars");
             _actorSystem.AddDependencyResolver(new ActorContainer(serviceProvider, _actorSystem));
-            _serverSupervisor = _actorSystem.ActorOf(_actorSystem.DI().Props<ServerSupervisor>());
-            _loopPinger = _actorSystem.ActorOf(_actorSystem.DI().Props<LoopPinger>());
+            _serverSupervisor = _actorSystem.ActorOf(_actorSystem.DI().Props<ServerSupervisor>(), "supervisor");
+            _broadcaster = _actorSystem.ActorOf(_actorSystem.DI().Props<Broadcaster>(), "broadcaster");
         }
 
         public CancellationTokenSource GameLoopCancellationSource
@@ -42,38 +42,23 @@ namespace BlockWars.Game.UI
 
         public void AddRegion(Guid leagueId, Region region)
         {
-            var command = new AddRegionCommand(leagueId, region);
-            _serverSupervisor.Tell(command);
+            _actorSystem.ActorSelection("/user/supervisor/" + leagueId.ToString()).Tell(new AddRegionCommand(leagueId, region));
         }
 
         public void BuildBlock(Guid leagueId, string regionName)
         {
             var command = new BuildBlockCommand(leagueId, regionName);
-            _serverSupervisor.Tell(command);
+            _actorSystem.ActorSelection("/user/supervisor/" + leagueId.ToString()).Tell(command);
         }
 
         public void EnsureGameLoop(IHubCallerConnectionContext<dynamic> clients)
-        {
-           lock(_lock)
-            {
-                if(!_gameLoopEnsured)
-                {
-                    _actorSystem.Scheduler.ScheduleTellRepeatedly(
-                        TimeSpan.Zero,
-                        TimeSpan.FromMilliseconds(14),
-                        _serverSupervisor,
-                        new RunGameLoopCommand(clients),
-                        _loopPinger);
-                      
-                    _gameLoopEnsured = true;
-                }
-            }
+        { 
         }
 
         public LeagueViewModel GetCurrentLeagueView()
         {
             var query = new CurrentLeagueViewQuery();
-            return _serverSupervisor.Ask<LeagueViewModel>(query).GetAwaiter().GetResult();
+            return _broadcaster.Ask<LeagueViewModel>(query).GetAwaiter().GetResult();
         }
     }
 }

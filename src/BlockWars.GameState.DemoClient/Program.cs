@@ -12,7 +12,7 @@ namespace BlockWars.GameState.DemoClient
 
         public static void Main(string[] args)
         {
-            //Run().GetAwaiter().GetResult();
+            Run().GetAwaiter().GetResult();
             Console.ReadKey();
         }
 
