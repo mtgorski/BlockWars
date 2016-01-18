@@ -13,6 +13,21 @@ label {
   font-size: 18px;
 }
 
+.region-container {
+    border-style: solid;
+    border-color: #fff;
+    margin: 10px;
+}
+
+.block {
+    height:1px;
+    margin:1px;
+}
+
+.built-block{
+    background-color: #ff0000;
+}
+
 .build-button {
   border: 3px solid white;
   background-color: #333;

@@ -4,7 +4,7 @@
 @{
     Layout = @"~/Views/Shared/_Layout.cshtml";
 }
-<div id="gameContainer"></div>
+<div id="gameContainer" class="row"></div>
 <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
 <script src="/lib/jquery/js/jquery.js"></script>
 <script src="/lib/signalr/jquery.signalr.js"></script>
@@ -36,21 +36,58 @@
             
             $.each(leagueInfo.Regions, function () {
                 if ($("#" + this.RegionId).length === 0) {
-                    var $newElement = $('<div>', { 'id': this.RegionId });
-                    var $name = $('<div>', { 'class': 'region-name', 'style': 'font-size:30px' }).text(this.Name + "     ");
+                    var $newElement = $('<div>', { 'id': this.RegionId, 'class': 'region-container row' });
+                    var $hud = $('<div>', {'class':'row'});
+                    var $name = $('<div>', { 'class': 'region-name col-xs-6', 'style': 'font-size:30px' }).text(this.Name);
                     var name = this.Name;
-                    var $click = $('<button>', { 'class': 'build-button' }).text('+').click(function () {
+                    var $click = $('<button>', { 'class': 'build-button col-xs-2' }).text('+').click(function () {
                         gameHub.server.buildBlock(currentGame, name);
                     });
-                    $name.append($click);
-                    $newElement.append($name);
-                    var $blockCount = $('<p>', { 'class': 'region-count', 'style': 'color:red;font-size:30px' }).text(this.BlockCount);
-                    $newElement.append($blockCount);
+                    $hud.append($name);
+                    $newElement.append($hud);
+                    var $blockCount = $('<div>', { 'class': 'region-count col-xs-4', 'style': 'color:red;font-size:30px' }).text(this.BlockCount);
+                    $hud.append($blockCount);
+                    $hud.append($click);
+
+                    $blockDisplay = $('<div>', { 'class': 'block-display col-offset-xs-1 col-xs-9' });
+
+                    var rows = 10;
+                    for (var i = rows; i > 0; i--)
+                    {
+                        var $row = $('<div>', { 'class': 'row' });
+                        for (var j = 0; j < 10; j++)
+                        {
+                            var $block = $('<div>', { 'class': 'block col-xs-1', 'data-number':i + j*10});
+                            $row.append($block);
+                        }
+                        $blockDisplay.append($row);
+                    }
+                    $newElement.append($blockDisplay);
                     $("#gameContainer").append($newElement);
                 }
                 var regionSelector = "#" + this.RegionId;
+                var blockCount = this.BlockCount;
+                var blockFactor = getBlockFactor(blockCount);
+
+
+
                 $(regionSelector + " .region-count").text(this.BlockCount);
+                $(regionSelector + " .block").removeClass('built-block').filter(function () {
+                    var number = $(this).data('number');
+                    return number <= blockCount / blockFactor;
+                }).addClass('built-block');
             });
+        }
+
+        function getBlockFactor(blockCount) {
+            var blockFactor = 1;
+            var divisor = 100;
+            while(blockCount / blockFactor > 100)
+            {
+                blockFactor = blockFactor * 10;
+            }
+
+            return blockFactor;
         }
 
         $.connection.hub.start();

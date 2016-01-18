@@ -21,6 +21,7 @@ namespace BlockWars.GameState.DemoClient
             var client = new HttpClient();
             while(true)
             {
+               await Task.Delay(100);
                var response = await client.PostAsync("http://localhost:49873/api/demo/build_block", new StringContent("content"));
                 response.EnsureSuccessStatusCode();
             }
