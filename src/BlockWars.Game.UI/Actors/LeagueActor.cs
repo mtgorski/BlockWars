@@ -6,6 +6,7 @@ using System;
 using BlockWars.Game.UI.ViewModels;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Akka.DI.Core;
 
 namespace BlockWars.Game.UI.Actors
 {
@@ -40,6 +41,11 @@ namespace BlockWars.Game.UI.Actors
                 Initialize(x);
                 return true;
             });
+
+            Receive<SavedLeagueMessage>(async x =>
+            {
+                await Self.GracefulStop(TimeSpan.FromSeconds(10));
+            });
         }
 
         private void Initialize(InitializeLeagueCommand x)
@@ -52,14 +58,29 @@ namespace BlockWars.Game.UI.Actors
             if (DateTime.UtcNow > _league.ExpiresAt && !_expired)
             {
                 _expired = true;
-                Sender.Tell(new LeagueEndedMessage());
                 TellStateToBroadcaster();
+                Context.Parent.Tell(new LeagueEndedMessage(_league.LeagueId));
+                SaveLeague();
             }
             
             if(!_expired)
             {
                 TellStateToBroadcaster();
             }
+        }
+
+        private void SaveLeague()
+        {
+            var view = new LeagueViewModel
+            {
+                League = _league,
+                Regions = _regions.Values
+            };
+
+            var command = new SaveLeagueCommand(view);
+
+            var repo = Context.ActorOf(Context.System.DI().Props<LeaguePersistenceActor>());
+            repo.Tell(command);
         }
 
         private void TellStateToBroadcaster()
