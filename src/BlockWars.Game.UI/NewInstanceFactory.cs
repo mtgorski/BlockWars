@@ -3,6 +3,7 @@
 using BlockWars.GameState.Models;
 using System.Collections.Generic;
 using System;
+using BlockWars.Game.UI.ViewModels;
 
 namespace BlockWars.Game.UI
 {
@@ -17,18 +18,16 @@ namespace BlockWars.Game.UI
             _newRegionsStrategy = newRegionsStrategy;
         }
 
-        public GameState GetInstance()
+        public LeagueViewModel GetInstance()
         {
             var league = _newLeagueStrategy.GetLeague();
             var regions = _newRegionsStrategy.GetRegions();
 
-            var gameState = new GameState(league);
-            foreach (var region in regions)
+            return new LeagueViewModel
             {
-                gameState.AddRegion(region);
-            }
-
-            return gameState;
+                League = league,
+                Regions = regions
+            };
         }
     }
 

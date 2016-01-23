@@ -1,7 +1,9 @@
-﻿namespace BlockWars.Game.UI
+﻿using BlockWars.Game.UI.ViewModels;
+
+namespace BlockWars.Game.UI
 {
     public interface INewInstanceFactory
     {
-        GameState GetInstance();
+        LeagueViewModel GetInstance();
     }
 }
