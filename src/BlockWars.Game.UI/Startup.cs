@@ -7,6 +7,9 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System;
 using BlockWars.Game.UI.Actors;
+using Akka.Actor;
+using BlockWars.Game.UI.IoC;
+using Akka.DI.Core;
 
 namespace BlockWars.Game.UI
 {
@@ -35,11 +38,20 @@ namespace BlockWars.Game.UI
                     o.Hubs.EnableDetailedErrors = true;
                 });
 
+            services.AddSingleton<ActorSystem>(
+                x =>
+                {
+                    var system = ActorSystem.Create("BlockWars");
+                    system.AddDependencyResolver(new ActorContainer(x, system));
+                    return system;
+                });
+
             services.AddSingleton<IServerManager, AkkaAdapter>();
+
             services.AddTransient<LeagueActor, LeagueActor>();
-            services.AddTransient<ServerSupervisor, ServerSupervisor>();
-            services.AddTransient<Broadcaster, Broadcaster>();
-            services.AddTransient<DemoActor, DemoActor>();
+            services.AddSingleton<ServerSupervisor, ServerSupervisor>();
+            services.AddSingleton<Broadcaster, Broadcaster>();
+            services.AddTransient<DemoActor, DemoActor>();            
         }
 
         public void Configure(IApplicationBuilder app,
@@ -48,13 +60,14 @@ namespace BlockWars.Game.UI
         {
             app.UseDeveloperExceptionPage();
             app.UseStaticFiles();
-            
             app.UseIISPlatformHandler();
             app.UseSignalR();
             app.UseMvc();
+
+            app.CreateActorSystem();
         }
 
-        
+
         public static void Main(string[] args)
         {
             WebApplication.Run<Startup>(args);
