@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using System;
 
@@ -13,12 +12,6 @@ namespace BlockWars.Game.UI
         public GameHub(IServerManager serverManager)
         {
             _serverManager = serverManager;
-        }
-
-        public override Task OnConnected()
-        {
-            _serverManager.EnsureGameLoop(Clients);
-            return Task.FromResult(0);
         }
 
         public void BuildBlock(string leagueIdInput, string regionName)

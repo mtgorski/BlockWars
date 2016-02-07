@@ -33,14 +33,6 @@ namespace BlockWars.Game.UI
             _actorSystem.ActorOf(_actorSystem.DI().Props<DemoActor>(), "demo");
         }
 
-        public CancellationTokenSource GameLoopCancellationSource
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         public void AddRegion(Guid leagueId, Region region)
         {
             _actorSystem.ActorSelection("/user/supervisor/" + leagueId.ToString()).Tell(new AddRegionCommand(leagueId, region));
@@ -50,16 +42,6 @@ namespace BlockWars.Game.UI
         {
             var command = new BuildBlockCommand(leagueId, regionName);
             _actorSystem.ActorSelection("/user/supervisor/" + leagueId.ToString()).Tell(command);
-        }
-
-        public void EnsureGameLoop(IHubCallerConnectionContext<dynamic> clients)
-        { 
-        }
-
-        public LeagueViewModel GetCurrentLeagueView()
-        {
-            var query = new CurrentLeagueViewQuery();
-            return _broadcaster.Ask<LeagueViewModel>(query).GetAwaiter().GetResult();
         }
     }
 }

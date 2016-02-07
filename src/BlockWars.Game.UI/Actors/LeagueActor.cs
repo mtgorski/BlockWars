@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using BlockWars.GameState.Models;
 using System;
 using BlockWars.Game.UI.ViewModels;
-using System.Diagnostics;
-using Newtonsoft.Json;
 using Akka.DI.Core;
 
 namespace BlockWars.Game.UI.Actors

@@ -1,8 +1,4 @@
-﻿using BlockWars.GameState.Client;
-using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.SignalR.Infrastructure;
-using System;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNet.Mvc;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 

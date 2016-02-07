@@ -17,12 +17,7 @@ namespace BlockWars.Game.UI
                 hub.Clients.All.updateRegionInfo(x);
                 return true;
             });
-
-            Receive<CurrentLeagueViewQuery>(x =>
-            {
-                Sender.Tell(_lastView);
-                return true;
-            });
         }
+
     }
 }
