@@ -66,7 +66,18 @@ namespace BlockWars.Game.UI.Actors
             if(!_expired)
             {
                 TellStateToBroadcaster();
+                TellStateToDemoActor();
             }
+        }
+
+        private void TellStateToDemoActor()
+        {
+            var view = new LeagueViewModel
+            {
+                League = _league,
+                Regions = _regions.Values
+            };
+            Context.ActorSelection("/user/demo").Tell(view);
         }
 
         private void SaveLeague()
@@ -91,7 +102,6 @@ namespace BlockWars.Game.UI.Actors
                 Regions = _regions.Values
             };
             Context.ActorSelection("/user/broadcaster").Tell(view);
-            Debug.WriteLine(JsonConvert.SerializeObject(view));
         }
 
         private void BuildBlock(BuildBlockCommand x)

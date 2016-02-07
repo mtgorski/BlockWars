@@ -33,6 +33,7 @@ namespace BlockWars.Game.UI.Actors
                 new PingLeaguesCommand(),
                 Context.Self);
 
+
             Receive<PingLeaguesCommand>(x =>
             {
                 PingLeagues(x);

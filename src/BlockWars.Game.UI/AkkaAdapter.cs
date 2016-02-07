@@ -30,6 +30,7 @@ namespace BlockWars.Game.UI
             _actorSystem.AddDependencyResolver(new ActorContainer(serviceProvider, _actorSystem));
             _serverSupervisor = _actorSystem.ActorOf(_actorSystem.DI().Props<ServerSupervisor>(), "supervisor");
             _broadcaster = _actorSystem.ActorOf(_actorSystem.DI().Props<Broadcaster>(), "broadcaster");
+            _actorSystem.ActorOf(_actorSystem.DI().Props<DemoActor>(), "demo");
         }
 
         public CancellationTokenSource GameLoopCancellationSource
