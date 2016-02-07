@@ -13,9 +13,12 @@ namespace BlockWars.Game.UI.Actors
         private Dictionary<string, Region> _regions = new Dictionary<string, Region>();
         private League _league;
         private bool _expired;
+        private readonly ISubscriptionRegistry _registry;
 
-        public LeagueActor()
+        public LeagueActor(ISubscriptionRegistry registry)
         {
+            _registry = registry;
+
             Receive<AddRegionCommand>(x =>
             {
                 AddRegion(x);
@@ -56,26 +59,28 @@ namespace BlockWars.Game.UI.Actors
             if (DateTime.UtcNow > _league.ExpiresAt && !_expired)
             {
                 _expired = true;
-                TellStateToBroadcaster();
+                NotifySubscribers();
                 Context.Parent.Tell(new LeagueEndedMessage(_league.LeagueId));
                 SaveLeague();
             }
-            
-            if(!_expired)
+
+            if (!_expired)
             {
-                TellStateToBroadcaster();
-                TellStateToDemoActor();
+                NotifySubscribers();
             }
         }
 
-        private void TellStateToDemoActor()
+        private void NotifySubscribers()
         {
-            var view = new LeagueViewModel
+            var subscribers = _registry.GetSubscribers<LeagueViewModel>();
+            foreach (var actor in subscribers)
             {
-                League = _league,
-                Regions = _regions.Values
-            };
-            Context.ActorSelection("/user/demo").Tell(view);
+                actor.Tell(new LeagueViewModel
+                {
+                    League = _league,
+                    Regions = _regions.Values
+                });
+            }
         }
 
         private void SaveLeague()
@@ -92,19 +97,9 @@ namespace BlockWars.Game.UI.Actors
             repo.Tell(command);
         }
 
-        private void TellStateToBroadcaster()
-        {
-            var view = new LeagueViewModel
-            {
-                League = _league,
-                Regions = _regions.Values
-            };
-            Context.ActorSelection("/user/broadcaster").Tell(view);
-        }
-
         private void BuildBlock(BuildBlockCommand x)
         {
-            if(_regions.ContainsKey(x.RegionName) && !_expired)
+            if (_regions.ContainsKey(x.RegionName) && !_expired)
             {
                 var region = _regions[x.RegionName];
                 region.BlockCount++;
@@ -113,7 +108,7 @@ namespace BlockWars.Game.UI.Actors
 
         private void AddRegion(AddRegionCommand x)
         {
-            if(!_regions.ContainsKey(x.Region.Name) && !_expired)
+            if (!_regions.ContainsKey(x.Region.Name) && !_expired)
             {
                 _regions[x.Region.Name] = x.Region;
             }

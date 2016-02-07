@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;
-using System;
 using BlockWars.Game.UI.Actors;
 using Akka.Actor;
 using BlockWars.Game.UI.IoC;
@@ -47,6 +46,7 @@ namespace BlockWars.Game.UI
                 });
 
             services.AddSingleton<IServerManager, AkkaAdapter>();
+            services.AddSingleton<ISubscriptionRegistry, SubscriptionRegistry>();
 
             services.AddTransient<LeagueActor, LeagueActor>();
             services.AddSingleton<ServerSupervisor, ServerSupervisor>();
