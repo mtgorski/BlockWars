@@ -6,19 +6,20 @@ using BlockWars.GameState.Client;
 using BlockWars.GameState.Models;
 using System.Collections.Generic;
 using Akka.DI.Core;
+using BlockWars.Game.UI.Strategies;
 
 namespace BlockWars.Game.UI.Actors
 {
     public class ServerSupervisor : ReceiveActor
     { 
         private readonly IGameStateClient _gameClient;
-        private readonly INewRegionsStrategy _regionsStrategy;
-        private readonly INewLeagueStrategy _leagueStrategy;
+        private readonly INewRegionsFactory _regionsStrategy;
+        private readonly INewLeagueFactory _leagueStrategy;
 
         public ServerSupervisor(
             IGameStateClient gameClient,
-            INewLeagueStrategy newLeagueStrategy,
-            INewRegionsStrategy newRegionsStrategy)
+            INewLeagueFactory newLeagueStrategy,
+            INewRegionsFactory newRegionsStrategy)
         {
             _gameClient = gameClient;
             _leagueStrategy = newLeagueStrategy;

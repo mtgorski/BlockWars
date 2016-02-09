@@ -6,18 +6,23 @@ namespace BlockWars.Game.UI
 {
     public class Broadcaster : ReceiveActor
     {
-        private LeagueViewModel _lastView;
+        private readonly IConnectionManager _connectionManager;
 
         public Broadcaster(IConnectionManager connectionManager)
         {
+            _connectionManager = connectionManager;
+
             Receive<LeagueViewModel>(x =>
             {
-                _lastView = x;
-                var hub = connectionManager.GetHubContext<GameHub>();
-                hub.Clients.All.updateRegionInfo(x);
+                Broadcast(x);
                 return true;
             });
         }
 
+        private void Broadcast(LeagueViewModel currentLeague)
+        {
+            var hub = _connectionManager.GetHubContext<GameHub>();
+            hub.Clients.All.updateRegionInfo(currentLeague);
+        }
     }
 }

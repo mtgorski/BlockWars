@@ -1,8 +1,6 @@
 ﻿using System;
 using BlockWars.GameState.Models;
 using Akka.Actor;
-using BlockWars.Game.UI.Actors;
-using Akka.DI.Core;
 using BlockWars.Game.UI.Commands;
 
 namespace BlockWars.Game.UI

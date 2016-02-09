@@ -9,6 +9,7 @@ using BlockWars.Game.UI.Actors;
 using Akka.Actor;
 using BlockWars.Game.UI.IoC;
 using Akka.DI.Core;
+using BlockWars.Game.UI.Strategies;
 
 namespace BlockWars.Game.UI
 {
@@ -28,8 +29,8 @@ namespace BlockWars.Game.UI
             var gameStateUrl = config.GetSection("urls")["GameStateApi"];
 
             services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), gameStateUrl));
-            services.AddTransient<INewLeagueStrategy, HardCodedLeagueStrategy>();
-            services.AddTransient<INewRegionsStrategy, HardCodedRegionsStrategy>();
+            services.AddTransient<INewLeagueFactory, HardCodedLeagueFactory>();
+            services.AddTransient<INewRegionsFactory, HardCodedRegionsFactory>();
 
             services.AddSignalR(
                 o =>
