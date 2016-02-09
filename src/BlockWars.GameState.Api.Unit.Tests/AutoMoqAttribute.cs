@@ -12,4 +12,11 @@ namespace BlockWars.GameState.Api.Unit.Tests
         {
         }
     }
+
+    public class InlineAndAutoMoqAttribute : InlineAutoDataAttribute
+    {
+        public InlineAndAutoMoqAttribute(params object[] values) : base(new AutoMoqAttribute(), values)
+        {
+        }
+    }
 }
