@@ -30,11 +30,6 @@ namespace BlockWars.GameState.Api.Controllers
         [ServiceFilter(typeof(ValidateLeagueFilter))]
         public async Task<IActionResult> PutLeagueAsync(Guid leagueId, [FromBody]League league)
         {
-            if(!ModelState.IsValid)
-            {
-                return HttpBadRequest(ModelState);
-            }
-
             await _upsertLeagueService.UpsertLeagueAsync(leagueId, league);
 
             return Ok();
