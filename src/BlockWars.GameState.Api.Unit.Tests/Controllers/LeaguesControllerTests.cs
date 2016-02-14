@@ -43,22 +43,5 @@ namespace BlockWars.GameState.Api.Unit.Tests.Controllers
             upsertLeagueService.Verify();
         }
 
-        [Theory, AutoMoqController]
-        public async Task PutLeagueAsync_GivenModelErrors_ShouldReturn400(
-            [Frozen] Mock<IUpsertLeague> upsertLeagueService,
-            LeaguesController sut,
-            string errorKey,
-            string errorMessage,
-            Guid givenLeagueId,
-            League givenLeague)
-        {
-            sut.ModelState.AddModelError(errorKey, errorMessage);
-
-            var actual = await sut.PutLeagueAsync(givenLeagueId, givenLeague);
-
-            actual.Should().BeOfType<BadRequestObjectResult>();
-            //TODO: test that the correct model state is returned
-            upsertLeagueService.Verify(m => m.UpsertLeagueAsync(It.IsAny<Guid>(), It.IsAny<League>()), Times.Never);
-        }
     }
 }
