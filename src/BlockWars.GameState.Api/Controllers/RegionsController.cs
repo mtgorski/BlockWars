@@ -27,6 +27,7 @@ namespace BlockWars.GameState.Api.Controllers
         }
 
         [ServiceFilter(typeof(ValidateLeagueIdFilter))]
+        [ServiceFilter(typeof(ValidateRegionFilter))]
         [HttpPut("api/leagues/{leagueId}/regions/{regionId}")]
         public async Task<IActionResult> PutRegionAsync(Guid leagueId, Guid regionId, [FromBody] Region region)
         {

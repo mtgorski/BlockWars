@@ -31,6 +31,8 @@ namespace BlockWars.GameState.Api
             services.AddScoped<AbstractValidator<League>, LeagueValidator>();
             services.AddScoped<ValidateLeagueIdFilter, ValidateLeagueIdFilter>();
             services.AddScoped<IValidateLeagueId, LeagueRepository>();
+            services.AddScoped<ValidateRegionFilter, ValidateRegionFilter>();
+            services.AddScoped<AbstractValidator<Region>, RegionValidator>();
 
             Mapper.AddProfile<LeagueProfile>();
             Mapper.AddProfile<RegionProfile>();

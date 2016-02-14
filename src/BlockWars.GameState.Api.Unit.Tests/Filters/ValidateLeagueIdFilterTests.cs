@@ -13,7 +13,7 @@ using Xunit;
 
 namespace BlockWars.GameState.Api.Unit.Tests.Attributes
 {
-    public class ValidateLeagueIdAttributeTests
+    public class ValidateLeagueIdFilterTests
     {
 
         [Theory, AutoMoq]
@@ -57,7 +57,7 @@ namespace BlockWars.GameState.Api.Unit.Tests.Attributes
         }
 
         [Theory, AutoMoq]
-        public async Task OnActionExecution_GivenInValidId_ShouldNotInvokeNext(
+        public async Task OnActionExecution_GivenInvalidId_ShouldNotInvokeNext(
             [Frozen] Mock<IValidateLeagueId> validator,
             [Frozen] Mock<IMockNextActionFilter> nextFilter,
             ValidateLeagueIdFilter sut,
