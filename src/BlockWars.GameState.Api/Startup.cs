@@ -5,10 +5,11 @@ using AutoMapper;
 using BlockWars.GameState.Api.Automapper;
 using BlockWars.GameState.Api.Repositories;
 using BlockWars.GameState.Api.Services;
-using BlockWars.GameState.Api.Attributes;
+using BlockWars.GameState.Api.Filters;
 using BlockWars.GameState.Api.Validators;
 using FluentValidation;
 using BlockWars.GameState.Models;
+using BlockWars.GameState.Api.Validators.Interfaces;
 
 namespace BlockWars.GameState.Api
 {
@@ -28,6 +29,8 @@ namespace BlockWars.GameState.Api
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<ValidateLeagueFilter, ValidateLeagueFilter>();
             services.AddScoped<AbstractValidator<League>, LeagueValidator>();
+            services.AddScoped<ValidateLeagueIdFilter, ValidateLeagueIdFilter>();
+            services.AddScoped<IValidateLeagueId, LeagueRepository>();
 
             Mapper.AddProfile<LeagueProfile>();
             Mapper.AddProfile<RegionProfile>();

@@ -4,7 +4,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Filters;
 using System;
 
-namespace BlockWars.GameState.Api.Attributes
+namespace BlockWars.GameState.Api.Filters
 {
     // At the time of coding there's no automatic integration between MVC6 and FluentValidation. Hence this thing.
     public class ValidateLeagueFilter : ActionFilterAttribute

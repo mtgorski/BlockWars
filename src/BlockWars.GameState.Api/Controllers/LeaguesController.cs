@@ -2,7 +2,7 @@
 using Microsoft.AspNet.Mvc;
 using BlockWars.GameState.Models;
 using System;
-using BlockWars.GameState.Api.Attributes;
+using BlockWars.GameState.Api.Filters;
 
 namespace BlockWars.GameState.Api.Controllers
 {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using BlockWars.GameState.Api.DataModels;
 using System;
+using BlockWars.GameState.Api.Validators.Interfaces;
 
 namespace BlockWars.GameState.Api.Repositories
 {
@@ -12,7 +13,7 @@ namespace BlockWars.GameState.Api.Repositories
         Task UpsertLeagueAsync(Guid leagueId, LeagueData league);
     }
 
-    public class LeagueRepository : ILeagueRepository
+    public class LeagueRepository : ILeagueRepository, IValidateLeagueId
     {
         private IMongoCollection<LeagueData> _leagues;
 
@@ -34,6 +35,11 @@ namespace BlockWars.GameState.Api.Repositories
                 r => r.LeagueId == leagueId, 
                 league, 
                 new FindOneAndReplaceOptions<LeagueData, LeagueData> { IsUpsert = true });
+        }
+
+        public Task<bool> ValidateLeagueIdAsync(Guid leagueId)
+        {
+            return _leagues.Find(x => x.LeagueId == leagueId).AnyAsync();
         }
     }
 }
