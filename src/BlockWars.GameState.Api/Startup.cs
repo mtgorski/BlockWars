@@ -10,17 +10,24 @@ using BlockWars.GameState.Api.Validators;
 using FluentValidation;
 using BlockWars.GameState.Models;
 using BlockWars.GameState.Api.Validators.Interfaces;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 
 namespace BlockWars.GameState.Api
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
 
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("urls.json");
+            var config = configurationBuilder.Build();
+            var gameStateDatabase = config.GetSection("urls")["GameStateDatabase"];
+
+            services.AddSingleton(_ => new MongoClient(gameStateDatabase));
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<IGetLeagues, GetLeaguesService>();
             services.AddScoped<IUpsertLeague, UpsertLeagueService>();

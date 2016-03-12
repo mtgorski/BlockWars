@@ -1,0 +1,5 @@
+﻿{
+  "urls": {
+    "GameStateDatabase": "mongodb://localhost:27017"
+  }
+}

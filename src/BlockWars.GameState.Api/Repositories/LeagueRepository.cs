@@ -7,21 +7,18 @@ using BlockWars.GameState.Api.Validators.Interfaces;
 
 namespace BlockWars.GameState.Api.Repositories
 {
-    public interface ILeagueRepository
-    {
-        Task<ICollection<LeagueData>> GetLeaguesAsync(IQuery<LeagueData> query);
-        Task UpsertLeagueAsync(Guid leagueId, LeagueData league);
-    }
 
     public class LeagueRepository : ILeagueRepository, IValidateLeagueId
     {
+        private const string DatabaseName = "GameState";
+        private const string CollectionName = "Leagues";
+
         private IMongoCollection<LeagueData> _leagues;
 
-        public LeagueRepository()
+        public LeagueRepository(MongoClient client)
         {
-            var client = new MongoClient("mongodb://localhost:27017");
-            var database = client.GetDatabase("GameState");
-            _leagues = database.GetCollection<LeagueData>("Leagues");
+            var database = client.GetDatabase(DatabaseName);
+            _leagues = database.GetCollection<LeagueData>(CollectionName);
         }
 
         public async Task<ICollection<LeagueData>> GetLeaguesAsync(IQuery<LeagueData> query)
@@ -31,10 +28,10 @@ namespace BlockWars.GameState.Api.Repositories
 
         public Task UpsertLeagueAsync(Guid leagueId, LeagueData league)
         {
-            return _leagues.FindOneAndReplaceAsync<LeagueData>(
+            return _leagues.ReplaceOneAsync(
                 r => r.LeagueId == leagueId, 
                 league, 
-                new FindOneAndReplaceOptions<LeagueData, LeagueData> { IsUpsert = true });
+                new UpdateOptions { IsUpsert = true });
         }
 
         public Task<bool> ValidateLeagueIdAsync(Guid leagueId)

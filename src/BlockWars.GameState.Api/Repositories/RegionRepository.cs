@@ -6,22 +6,18 @@ using MongoDB.Driver;
 
 namespace BlockWars.GameState.Api.Repositories
 {
-    public interface IRegionRepository
-    {
-        Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId);
-        Task UpsertRegionAsync(Guid regionId, RegionData regionData);
-    }
 
     public class RegionRepository : IRegionRepository
     {
-        private readonly IMongoCollection<RegionData> _regions;
-        private readonly IMongoDatabase _database;
+        private const string DatabaseName = "GameState";
+        private const string CollectionName = "Regions";
 
-        public RegionRepository()
+        private readonly IMongoCollection<RegionData> _regions;
+
+        public RegionRepository(MongoClient client)
         {
-            var client = new MongoClient("mongodb://localhost:27017");
-            _database = client.GetDatabase("GameState");
-            _regions = _database.GetCollection<RegionData>("Regions");
+            var database = client.GetDatabase(DatabaseName);
+            _regions = database.GetCollection<RegionData>(CollectionName);
         }
 
         public async Task<ICollection<RegionData>> GetRegionsAsync(Guid leagueId)
@@ -32,10 +28,10 @@ namespace BlockWars.GameState.Api.Repositories
         public Task UpsertRegionAsync(Guid regionId, RegionData regionData)
         {
             return _regions
-                .FindOneAndReplaceAsync<RegionData>(
+                .ReplaceOneAsync(
                     x => x.RegionId == regionId,
                     regionData,
-                    new FindOneAndReplaceOptions<RegionData, RegionData> { IsUpsert = true });
+                    new UpdateOptions { IsUpsert = true });
         }
     }
 }
