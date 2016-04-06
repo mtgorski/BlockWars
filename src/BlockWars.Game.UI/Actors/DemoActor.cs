@@ -30,7 +30,7 @@ namespace BlockWars.Game.UI.Actors
 
             Context.System.Scheduler.ScheduleTellRepeatedly(
                 TimeSpan.FromSeconds(0),
-                TimeSpan.FromMilliseconds(1),
+                TimeSpan.FromMilliseconds(50),
                 Self,
                 new SendDemoClickCommand(),
                 Self);
@@ -45,7 +45,7 @@ namespace BlockWars.Game.UI.Actors
             }
             var whichRegionIndex = Rng.Next(_currentLeague.Regions.Count);
             var whichRegion = _currentLeague.Regions.Where((_, i) => i == whichRegionIndex).Single();
-            Parallel.For(0, 100, _ =>
+            Parallel.For(0, 5, _ =>
             {
                _serverManager.BuildBlock(_currentLeague.League.LeagueId, whichRegion.Name);
             });
