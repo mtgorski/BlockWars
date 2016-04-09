@@ -40,9 +40,10 @@ namespace BlockWars.Game.UI.Actors
                 return true;
             });
 
-            Receive<SavedLeagueMessage>(async x =>
+            Receive<SavedLeagueMessage>(x =>
             {
-                await Self.GracefulStop(TimeSpan.FromSeconds(10));
+                //TODO: figure out why trying to gracefully stop the actor throws an exception
+                return;
             });
         }
 
