@@ -13,12 +13,9 @@ namespace BlockWars.Game.UI.Actors
         private Dictionary<string, Region> _regions = new Dictionary<string, Region>();
         private League _league;
         private bool _expired;
-        private readonly ISubscriptionRegistry _registry;
 
-        public LeagueActor(ISubscriptionRegistry registry)
+        public LeagueActor()
         {
-            _registry = registry;
-
             Receive<AddRegionCommand>(x =>
             {
                 AddRegion(x);
@@ -72,15 +69,12 @@ namespace BlockWars.Game.UI.Actors
 
         private void NotifySubscribers()
         {
-            var subscribers = _registry.GetSubscribers<LeagueViewModel>();
-            foreach (var actor in subscribers)
+            var currentState = new LeagueViewModel
             {
-                actor.Tell(new LeagueViewModel
-                {
-                    League = _league,
-                    Regions = _regions.Values
-                });
-            }
+                League = _league,
+                Regions = _regions.Values
+            };
+            Context.System.EventStream.Publish(currentState);
         }
 
         private void SaveLeague()

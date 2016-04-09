@@ -17,9 +17,8 @@ namespace BlockWars.Game.UI
             var broadcaster = actorSystem.ActorOf(actorSystem.DI().Props<Broadcaster>(), "broadcaster");
             var demo = actorSystem.ActorOf(actorSystem.DI().Props<DemoActor>(), "demo");
 
-            var registry = provider.GetService<ISubscriptionRegistry>();
-            registry.Subscribe<LeagueViewModel>(broadcaster);
-            registry.Subscribe<LeagueViewModel>(demo);
+            actorSystem.EventStream.Subscribe(broadcaster, typeof(LeagueViewModel));
+            actorSystem.EventStream.Subscribe(demo, typeof(LeagueViewModel));
         }
     }
 }
