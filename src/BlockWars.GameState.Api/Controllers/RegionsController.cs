@@ -31,7 +31,6 @@ namespace BlockWars.GameState.Api.Controllers
         [HttpPut("api/leagues/{leagueId}/regions/{regionId}")]
         public async Task<IActionResult> PutRegionAsync(Guid leagueId, Guid regionId, [FromBody] Region region)
         {
-            //TODO: add validation attributes
             await _upsertRegionService.UpsertRegionAsync(leagueId, regionId, region);
             return Ok();
         }

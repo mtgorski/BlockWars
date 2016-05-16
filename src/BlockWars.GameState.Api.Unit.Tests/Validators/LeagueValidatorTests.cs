@@ -67,5 +67,14 @@ namespace BlockWars.GameState.Api.Unit.Tests.Validators
             actual.IsValid.Should().BeFalse();
             actual.Errors.Should().ContainSingle(x => x.PropertyName == "ExpiresAt" && x.ErrorMessage == "ExpiresAt cannot be default.");
         }
+
+        [Theory, AutoMoq]
+        public void Validate_GivenNullLeague_ShouldReturnError(
+            LeagueValidator sut)
+        {
+            var actual = sut.Validate(instance:null);
+
+            actual.IsValid.Should().BeFalse();
+        }
     }
 }
