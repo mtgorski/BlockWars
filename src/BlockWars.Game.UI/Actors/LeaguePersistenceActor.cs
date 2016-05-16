@@ -22,6 +22,7 @@ namespace BlockWars.Game.UI.Actors
         {
             await _client.PutLeagueAsync(x.ViewModel.League.LeagueId, x.ViewModel.League);
 
+            // TODO: make this less chatty by adding a bulk API
             foreach(var region in x.ViewModel.Regions)
             {
                 await _client.PutRegionAsync(x.ViewModel.League.LeagueId, region.RegionId, region);

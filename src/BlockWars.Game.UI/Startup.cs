@@ -47,7 +47,6 @@ namespace BlockWars.Game.UI
                 });
 
             services.AddSingleton<IServerManager, AkkaAdapter>();
-            services.AddSingleton<ISubscriptionRegistry, SubscriptionRegistry>();
 
             services.AddTransient<LeagueActor, LeagueActor>();
             services.AddSingleton<ServerSupervisor, ServerSupervisor>();

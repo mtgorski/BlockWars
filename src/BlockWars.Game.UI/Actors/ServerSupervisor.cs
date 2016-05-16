@@ -1,7 +1,6 @@
 ﻿using Akka.Actor;
 using System;
 using BlockWars.Game.UI.Commands;
-using System.Threading.Tasks;
 using BlockWars.GameState.Client;
 using BlockWars.GameState.Models;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace BlockWars.Game.UI.Actors
             _leagueStrategy = newLeagueStrategy;
             _regionsStrategy = newRegionsStrategy;
 
-            InitializeLeagueAsync(true).GetAwaiter().GetResult();
+            InitializeLeague(true);
 
             Context.System.Scheduler.ScheduleTellRepeatedly(
                 TimeSpan.FromSeconds(0),
@@ -43,7 +42,7 @@ namespace BlockWars.Game.UI.Actors
 
             Receive<LeagueEndedMessage>(x =>
             {
-                InitializeLeagueAsync(false).GetAwaiter().GetResult();
+                InitializeLeague(false);
                 return true;
             });
         }
@@ -57,7 +56,7 @@ namespace BlockWars.Game.UI.Actors
             }
         }
 
-        private Task InitializeLeagueAsync(bool initializingServer)
+        private void InitializeLeague(bool initializingServer)
         {
             var league = initializingServer ? _gameClient.GetCurrentLeagueAsync().GetAwaiter().GetResult() : null;
             ICollection<Region> regions;
@@ -78,7 +77,6 @@ namespace BlockWars.Game.UI.Actors
                 currentLeague.Tell(new AddRegionCommand(league.LeagueId, region));
             }
 
-            return Task.FromResult(0);
         }
 
     }
