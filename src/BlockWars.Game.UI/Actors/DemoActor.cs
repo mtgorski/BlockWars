@@ -3,7 +3,8 @@ using Akka.Actor;
 using BlockWars.Game.UI.ViewModels;
 using System.Linq;
 using BlockWars.Game.UI.Commands;
-using System.Threading.Tasks;
+using Microsoft.Extensions.OptionsModel;
+using BlockWars.Game.UI.Options;
 
 namespace BlockWars.Game.UI.Actors
 {
@@ -12,10 +13,13 @@ namespace BlockWars.Game.UI.Actors
         private static Random Rng = new Random();
         private readonly IServerManager _serverManager;
         private LeagueViewModel _currentLeague;
+        private readonly IOptions<DemoOptions> _options;
 
-        public DemoActor(IServerManager serverManager)
+        public DemoActor(IServerManager serverManager, IOptions<DemoOptions> options)
         {
             _serverManager = serverManager;
+            _options = options;
+
             Receive<LeagueViewModel>(x =>
             {
                 _currentLeague = x;
@@ -45,11 +49,11 @@ namespace BlockWars.Game.UI.Actors
             }
             var whichRegionIndex = Rng.Next(_currentLeague.Regions.Count);
             var whichRegion = _currentLeague.Regions.Where((_, i) => i == whichRegionIndex).Single();
-            Parallel.For(0, 5, _ =>
+
+            for(int i = 0; i < _options.Value.DemoBlocksPerCommand; i++)
             {
-               _serverManager.BuildBlock(_currentLeague.League.LeagueId, whichRegion.Name);
-            });
-            
+                _serverManager.BuildBlock(_currentLeague.League.LeagueId, whichRegion.Name);
+            }            
         }
     }
 }

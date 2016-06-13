@@ -10,6 +10,7 @@ using Akka.Actor;
 using BlockWars.Game.UI.IoC;
 using Akka.DI.Core;
 using BlockWars.Game.UI.Strategies;
+using BlockWars.Game.UI.Options;
 
 namespace BlockWars.Game.UI
 {
@@ -27,6 +28,9 @@ namespace BlockWars.Game.UI
             configurationBuilder.AddJsonFile("appsettings.json");
             var config = configurationBuilder.Build();
             var gameStateUrl = config.GetSection("urls")["GameStateApi"];
+
+            services.AddOptions();
+            services.Configure<DemoOptions>(config);
 
             services.AddSingleton<IGameStateClient, NullGameClient>();
             services.AddTransient<INewLeagueFactory, HardCodedLeagueFactory>();
