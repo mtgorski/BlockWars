@@ -36,6 +36,7 @@ label {
   border-radius: 30px;
   font-size: 30px;
   margin-top: 20px;
+  outline-width: 0;
 }
 
 .cover-heading {
