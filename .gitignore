@@ -211,5 +211,5 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 
-wwwroot/lib/
-
+/src/BlockWars.Game.UI/wwwroot/lib
+/src/BlockWars.Game.UI/Properties/PublishProfiles
