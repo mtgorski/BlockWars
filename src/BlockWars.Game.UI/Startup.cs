@@ -63,7 +63,12 @@ namespace BlockWars.Game.UI
                               IHostingEnvironment env,
                               ILoggerFactory loggerFactory)
         {
-            app.UseDeveloperExceptionPage();
+            if(env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseIISPlatformHandler();
             app.UseSignalR();
