@@ -58,6 +58,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 _expired = true;
                 NotifySubscribers();
+                // TODO: refactor league ending to use message bus so that there's less direct coupling
                 Context.Parent.Tell(new LeagueEndedMessage(_league.LeagueId));
                 SaveLeague();
             }
