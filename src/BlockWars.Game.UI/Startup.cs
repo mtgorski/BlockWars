@@ -28,7 +28,7 @@ namespace BlockWars.Game.UI
             var config = configurationBuilder.Build();
             var gameStateUrl = config.GetSection("urls")["GameStateApi"];
 
-            services.AddSingleton<IGameStateClient>(x => new GameStateClient(x.GetService<HttpClient>(), gameStateUrl));
+            services.AddSingleton<IGameStateClient, NullGameClient>();
             services.AddTransient<INewLeagueFactory, HardCodedLeagueFactory>();
             services.AddTransient<INewRegionsFactory, HardCodedRegionsFactory>();
 
