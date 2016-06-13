@@ -74,20 +74,13 @@
                 $(regionSelector + " .region-count").text(this.BlockCount);
                 $(regionSelector + " .block").removeClass('built-block').filter(function () {
                     var number = $(this).data('number');
-                    return number <= blockCount / blockFactor;
+                    return number <= ((blockCount / blockFactor) % 100);
                 }).addClass('built-block');
             });
         }
 
         function getBlockFactor(blockCount) {
-            var blockFactor = 1;
-            var divisor = 100;
-            while(blockCount / blockFactor > 100)
-            {
-                blockFactor = blockFactor * 10;
-            }
-
-            return blockFactor;
+            return 1;
         }
 
         $.connection.hub.start();
