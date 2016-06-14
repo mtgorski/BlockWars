@@ -13,12 +13,16 @@ namespace BlockWars.Game.UI
         {
             var provider = app.ApplicationServices;
             var actorSystem = provider.GetService<ActorSystem>();
-            actorSystem.ActorOf(actorSystem.DI().Props<ServerSupervisor>(), "supervisor");
+            var supervisor = actorSystem.ActorOf(actorSystem.DI().Props<ServerSupervisor>(), "supervisor");
             var broadcaster = actorSystem.ActorOf(actorSystem.DI().Props<Broadcaster>(), "broadcaster");
             var demo = actorSystem.ActorOf(actorSystem.DI().Props<DemoActor>(), "demo");
+            var saver = actorSystem.ActorOf(actorSystem.DI().Props<LeaguePersistenceActor>(), "saver");
 
             actorSystem.EventStream.Subscribe(broadcaster, typeof(LeagueViewModel));
             actorSystem.EventStream.Subscribe(demo, typeof(LeagueViewModel));
+
+            actorSystem.EventStream.Subscribe(saver, typeof(LeagueEndedMessage));
+            actorSystem.EventStream.Subscribe(supervisor, typeof(LeagueEndedMessage));
         }
     }
 }

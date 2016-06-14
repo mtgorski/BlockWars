@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using BlockWars.GameState.Models;
 using System;
 using BlockWars.Game.UI.ViewModels;
-using Akka.DI.Core;
 
 namespace BlockWars.Game.UI.Actors
 {
@@ -39,12 +38,6 @@ namespace BlockWars.Game.UI.Actors
                 Initialize(x);
                 return true;
             });
-
-            Receive<SavedLeagueMessage>(x =>
-            {
-                //TODO: figure out why trying to gracefully stop the actor throws an exception
-                return;
-            });
         }
 
         private void Initialize(InitializeLeagueCommand x)
@@ -58,9 +51,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 _expired = true;
                 NotifySubscribers();
-                // TODO: refactor league ending to use message bus so that there's less direct coupling
-                Context.Parent.Tell(new LeagueEndedMessage(_league.LeagueId));
-                SaveLeague();
+                Context.System.EventStream.Publish(new LeagueEndedMessage(_league.LeagueId, GetCurrentView()));
             }
 
             if (!_expired)
@@ -71,26 +62,17 @@ namespace BlockWars.Game.UI.Actors
 
         private void NotifySubscribers()
         {
-            var currentState = new LeagueViewModel
-            {
-                League = _league,
-                Regions = _regions.Values
-            };
+            LeagueViewModel currentState = GetCurrentView();
             Context.System.EventStream.Publish(currentState);
         }
 
-        private void SaveLeague()
+        private LeagueViewModel GetCurrentView()
         {
-            var view = new LeagueViewModel
+            return new LeagueViewModel
             {
                 League = _league,
                 Regions = _regions.Values
             };
-
-            var command = new SaveLeagueCommand(view);
-
-            var repo = Context.ActorOf(Context.System.DI().Props<LeaguePersistenceActor>());
-            repo.Tell(command);
         }
 
         private void BuildBlock(BuildBlockCommand x)

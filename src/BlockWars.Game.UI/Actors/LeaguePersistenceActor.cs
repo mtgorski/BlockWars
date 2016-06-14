@@ -12,22 +12,21 @@ namespace BlockWars.Game.UI.Actors
         {
             _client = client;
 
-            Receive<SaveLeagueCommand>(async x =>
+            Receive<LeagueEndedMessage>(async x =>
             {
                 await SaveLeagueAsync(x);               
             });
         }
 
-        private async Task SaveLeagueAsync(SaveLeagueCommand x)
+        private async Task SaveLeagueAsync(LeagueEndedMessage x)
         {
-            await _client.PutLeagueAsync(x.ViewModel.League.LeagueId, x.ViewModel.League);
+            await _client.PutLeagueAsync(x.FinalState.League.LeagueId, x.FinalState.League);
 
             // TODO: make this less chatty by adding a bulk API
-            foreach(var region in x.ViewModel.Regions)
+            foreach(var region in x.FinalState.Regions)
             {
-                await _client.PutRegionAsync(x.ViewModel.League.LeagueId, region.RegionId, region);
+                await _client.PutRegionAsync(x.FinalState.League.LeagueId, region.RegionId, region);
             }
-            Sender.Tell(new SavedLeagueMessage());
         }
     }
 }
