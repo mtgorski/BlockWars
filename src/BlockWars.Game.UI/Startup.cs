@@ -31,6 +31,7 @@ namespace BlockWars.Game.UI
 
             services.AddOptions();
             services.Configure<DemoOptions>(config);
+            services.Configure<GameDuration>(config);
 
             services.AddSingleton<IGameStateClient, NullGameClient>();
             services.AddTransient<INewLeagueFactory, HardCodedLeagueFactory>();
