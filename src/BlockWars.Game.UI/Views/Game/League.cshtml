@@ -4,6 +4,7 @@
 @{
     Layout = @"~/Views/Shared/_Layout.cshtml";
 }
+<div id="outcomeMessage"></div>
 <div id="gameContainer" class="row"></div>
 <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
 <script src="/lib/jquery/js/jquery.js"></script>
@@ -17,19 +18,24 @@
 
         function playAgain() {
             $("#gameOver").hide();
+            $("#outcomeMessage").hide();
             $("#gameContainer").empty();
             currentGame = null;
         }
         $("#playAgainButton").click(playAgain);
         
+        gameHub.client.onGameEnd = function (message) {
+            $("#gameOver").show();
+            $("#gameContainer .build-button").prop('disabled', true).off('click');
+            $("#outcomeMessage").text(message).show();
+        };
+
         gameHub.client.updateRegionInfo = function (leagueInfo) {
 
             if (currentGame == null) {
                 currentGame = leagueInfo.League.LeagueId;
             }
             if (currentGame != leagueInfo.League.LeagueId) {
-                $("#gameOver").show();
-                $("#gameContainer .build-button").prop('disabled', true).off('click');
                 return;
             }
 

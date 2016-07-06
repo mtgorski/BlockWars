@@ -21,6 +21,7 @@ namespace BlockWars.Game.UI
             actorSystem.EventStream.Subscribe(broadcaster, typeof(LeagueViewModel));
             actorSystem.EventStream.Subscribe(demo, typeof(LeagueViewModel));
 
+            actorSystem.EventStream.Subscribe(broadcaster, typeof(LeagueEndedMessage));
             actorSystem.EventStream.Subscribe(saver, typeof(LeagueEndedMessage));
             actorSystem.EventStream.Subscribe(supervisor, typeof(LeagueEndedMessage));
         }
