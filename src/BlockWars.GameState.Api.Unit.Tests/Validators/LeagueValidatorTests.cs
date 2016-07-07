@@ -56,16 +56,16 @@ namespace BlockWars.GameState.Api.Unit.Tests.Validators
         }
 
         [Theory, AutoMoq]
-        public void Validate_GivenDefaultExpiresAt_ShouldReturnError(
+        public void Validate_GivenDefaultCreatedAt_ShouldReturnError(
             League league, 
             LeagueValidator sut)
         {
-            league.ExpiresAt = DateTime.MinValue;
+            league.CreatedAt = DateTime.MinValue;
 
             var actual = sut.Validate(league);
 
             actual.IsValid.Should().BeFalse();
-            actual.Errors.Should().ContainSingle(x => x.PropertyName == "ExpiresAt" && x.ErrorMessage == "ExpiresAt cannot be default.");
+            actual.Errors.Should().ContainSingle(x => x.PropertyName == "CreatedAt" && x.ErrorMessage == "CreatedAt cannot be default.");
         }
 
         [Theory, AutoMoq]

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using BlockWars.GameState.Models;
 using System;
 using BlockWars.Game.UI.ViewModels;
+using System.Timers;
+using System.Diagnostics;
 
 namespace BlockWars.Game.UI.Actors
 {
@@ -12,6 +14,7 @@ namespace BlockWars.Game.UI.Actors
         private Dictionary<string, Region> _regions = new Dictionary<string, Region>();
         private League _league;
         private bool _expired;
+        private Stopwatch _clock;
 
         public LeagueActor()
         {
@@ -43,12 +46,15 @@ namespace BlockWars.Game.UI.Actors
         private void Initialize(InitializeLeagueCommand x)
         {
             _league = x.LeagueData;
+            _clock = new Stopwatch();
+            _clock.Start();
         }
 
         private void CheckState(CheckStateCommand x)
         {
-            if (DateTime.UtcNow > _league.ExpiresAt && !_expired)
+            if (_clock.ElapsedMilliseconds > _league.Duration && !_expired)
             {
+                _clock.Stop();
                 _expired = true;
                 NotifySubscribers();
                 Context.System.EventStream.Publish(new LeagueEndedMessage(_league.LeagueId, GetCurrentView()));

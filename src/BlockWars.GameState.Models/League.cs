@@ -13,6 +13,8 @@ namespace BlockWars.GameState.Models
 
         public string Description { get; set; }
 
-        public DateTime ExpiresAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public long Duration { get; set; }
     }
 }
