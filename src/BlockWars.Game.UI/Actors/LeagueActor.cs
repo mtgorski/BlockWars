@@ -76,6 +76,7 @@ namespace BlockWars.Game.UI.Actors
         {
             return new LeagueViewModel
             {
+                RemainingMilliseconds = _league.Duration - _clock.ElapsedMilliseconds,
                 League = _league,
                 Regions = _regions.Values
             };

@@ -4,6 +4,7 @@
 @{
     Layout = @"~/Views/Shared/_Layout.cshtml";
 }
+<div id="time"></div>
 <div id="outcomeMessage"></div>
 <div id="gameContainer" class="row"></div>
 <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
@@ -18,6 +19,7 @@
 
         function playAgain() {
             $("#gameOver").hide();
+            $("#time").show();
             $("#outcomeMessage").hide();
             $("#gameContainer").empty();
             currentGame = null;
@@ -26,6 +28,7 @@
         
         gameHub.client.onGameEnd = function (message) {
             $("#gameOver").show();
+            $("#time").hide();
             $("#gameContainer .build-button").prop('disabled', true).off('click');
             $("#outcomeMessage").text(message).show();
         };
@@ -39,6 +42,7 @@
                 return;
             }
 
+            $("#time").text(Math.floor(leagueInfo.RemainingMilliseconds / 1000));
             
             $.each(leagueInfo.Regions, function () {
                 if ($("#" + this.RegionId).length === 0) {
