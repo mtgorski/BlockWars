@@ -12,7 +12,7 @@ namespace BlockWars.Game.UI.Actors
     {
         private static Random Rng = new Random();
         private readonly IServerManager _serverManager;
-        private LeagueViewModel _currentLeague;
+        private LeagueViewModel? _currentLeague;
         private readonly IOptions<DemoOptions> _options;
 
         public DemoActor(IServerManager serverManager, IOptions<DemoOptions> options)
@@ -47,12 +47,12 @@ namespace BlockWars.Game.UI.Actors
             {
                 return;
             }
-            var whichRegionIndex = Rng.Next(_currentLeague.Regions.Count);
-            var whichRegion = _currentLeague.Regions.Where((_, i) => i == whichRegionIndex).Single();
+            var whichRegionIndex = Rng.Next(_currentLeague.Value.Regions.Count);
+            var whichRegion = _currentLeague.Value.Regions.Where((_, i) => i == whichRegionIndex).Single();
 
             for(int i = 0; i < _options.Value.DemoBlocksPerCommand; i++)
             {
-                _serverManager.BuildBlock(_currentLeague.League.LeagueId, whichRegion.Name);
+                _serverManager.BuildBlock(_currentLeague.Value.League.LeagueId, whichRegion.Name);
             }            
         }
     }

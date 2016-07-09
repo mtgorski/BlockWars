@@ -74,11 +74,11 @@ namespace BlockWars.Game.UI.Actors
         private LeagueViewModel GetCurrentView()
         {
             return new LeagueViewModel
-            {
-                RemainingMilliseconds = _league.Duration - _clock.ElapsedMilliseconds,
-                League = _league,
-                Regions = _regions.Values.ToList()
-            };
+            (
+                _league.Duration - _clock.ElapsedMilliseconds,
+                _league,
+                _regions.Values.ToList()
+            );
         }
 
         private void BuildBlock(BuildBlockCommand x)

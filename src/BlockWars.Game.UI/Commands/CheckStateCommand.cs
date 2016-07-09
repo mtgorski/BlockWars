@@ -1,6 +1,6 @@
 ﻿namespace BlockWars.Game.UI.Actors
 {
-    internal class CheckStateCommand
+    public class CheckStateCommand
     {
         public CheckStateCommand()
         {
