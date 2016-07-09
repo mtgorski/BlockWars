@@ -1,10 +1,10 @@
-﻿using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
 using System.Collections.Generic;
 
 namespace BlockWars.Game.UI.Strategies
 {
     public interface INewRegionsFactory
     {
-        ICollection<Region> GetRegions();
+        ICollection<RegionState> GetRegions();
     }
 }

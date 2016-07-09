@@ -1,18 +1,17 @@
 ﻿using Akka.Actor;
 using BlockWars.Game.UI.Commands;
 using System.Collections.Generic;
-using BlockWars.GameState.Models;
-using System;
 using BlockWars.Game.UI.ViewModels;
-using System.Timers;
 using System.Diagnostics;
+using BlockWars.Game.UI.Models;
+using System.Linq;
 
 namespace BlockWars.Game.UI.Actors
 {
     public class LeagueActor : ReceiveActor
     {
-        private Dictionary<string, Region> _regions = new Dictionary<string, Region>();
-        private League _league;
+        private Dictionary<string, RegionState> _regions = new Dictionary<string, RegionState>();
+        private LeagueState _league;
         private bool _expired;
         private Stopwatch _clock;
 
@@ -78,7 +77,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 RemainingMilliseconds = _league.Duration - _clock.ElapsedMilliseconds,
                 League = _league,
-                Regions = _regions.Values
+                Regions = _regions.Values.ToList()
             };
         }
 
@@ -87,7 +86,7 @@ namespace BlockWars.Game.UI.Actors
             if (_regions.ContainsKey(x.RegionName) && !_expired)
             {
                 var region = _regions[x.RegionName];
-                region.BlockCount++;
+                _regions[x.RegionName] = region.AddBlocks(1);
             }
         }
 

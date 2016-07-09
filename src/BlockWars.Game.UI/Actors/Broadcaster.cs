@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
 using BlockWars.Game.UI.Actors;
 using BlockWars.Game.UI.ViewModels;
 using Microsoft.AspNet.SignalR.Infrastructure;

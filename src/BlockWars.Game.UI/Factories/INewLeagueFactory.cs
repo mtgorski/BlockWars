@@ -1,9 +1,9 @@
-﻿using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
 
 namespace BlockWars.Game.UI.Strategies
 {
     public interface INewLeagueFactory
     {
-        League GetLeague();
+        LeagueState GetLeague();
     }
 }

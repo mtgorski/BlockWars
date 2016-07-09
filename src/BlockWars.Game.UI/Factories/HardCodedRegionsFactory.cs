@@ -1,25 +1,16 @@
-﻿using BlockWars.GameState.Models;
-using System;
+﻿using BlockWars.Game.UI.Models;
 using System.Collections.Generic;
 
 namespace BlockWars.Game.UI.Strategies
 {
     public class HardCodedRegionsFactory : INewRegionsFactory
     {
-        public ICollection<Region> GetRegions()
+        public ICollection<RegionState> GetRegions()
         {
-            return new List<Region>
+            return new List<RegionState>
             {
-                new Region
-                {
-                    Name = "Cats",
-                    RegionId = Guid.NewGuid()
-                },
-                new Region
-                {
-                    Name = "Dogs",
-                    RegionId = Guid.NewGuid()
-                }
+                new RegionState("Cats"),
+                new RegionState("Dogs")
             };
         }
     }

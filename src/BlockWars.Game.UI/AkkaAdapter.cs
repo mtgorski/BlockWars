@@ -1,13 +1,13 @@
 ﻿using System;
-using BlockWars.GameState.Models;
 using Akka.Actor;
 using BlockWars.Game.UI.Commands;
+using BlockWars.Game.UI.Models;
 
 namespace BlockWars.Game.UI
 {
     /// <summary>
-    /// A wrapper to the Akka actor system in order to provide consistency
-    /// with the other implementation
+    /// A wrapper to the Akka actor system to allow clients to interact with the system
+    /// without know Akka details
     /// </summary>
     public class AkkaAdapter : IServerManager
     {
@@ -18,7 +18,7 @@ namespace BlockWars.Game.UI
             _actorSystem = actorSystem; 
         }
 
-        public void AddRegion(Guid leagueId, Region region)
+        public void AddRegion(Guid leagueId, RegionState region)
         {
             _actorSystem.ActorSelection("/user/supervisor/" + leagueId.ToString()).Tell(new AddRegionCommand(leagueId, region));
         }

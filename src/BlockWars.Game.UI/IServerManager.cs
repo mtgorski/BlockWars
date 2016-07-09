@@ -1,4 +1,4 @@
-﻿using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
 using System;
 
 namespace BlockWars.Game.UI
@@ -7,6 +7,6 @@ namespace BlockWars.Game.UI
     {
         void BuildBlock(Guid leagueId, string regionName);
 
-        void AddRegion(Guid leagueId, Region regionName);
+        void AddRegion(Guid leagueId, RegionState regionName);
     }
 }

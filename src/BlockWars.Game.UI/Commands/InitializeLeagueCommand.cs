@@ -1,12 +1,12 @@
-﻿using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
 
 namespace BlockWars.Game.UI.Commands
 {
     public class InitializeLeagueCommand
     {
-        public League LeagueData { get;  }
+        public LeagueState LeagueData { get;  }
 
-        public InitializeLeagueCommand(League league)
+        public InitializeLeagueCommand(LeagueState league)
         {
             LeagueData = league;
         }

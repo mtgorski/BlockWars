@@ -1,5 +1,5 @@
-﻿using BlockWars.Game.UI.Options;
-using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
+using BlockWars.Game.UI.Options;
 using Microsoft.Extensions.OptionsModel;
 using System;
 
@@ -14,17 +14,16 @@ namespace BlockWars.Game.UI.Strategies
             _options = options;
         }
 
-        public League GetLeague()
+        public LeagueState GetLeague()
         {
-            var league = new League
-            {
-                LeagueId = Guid.NewGuid(),
-                Name = DateTime.UtcNow.ToString(),
-                Description = "Automatically generated league",
-                Duration = 120000L
-            };
-
-            return league;
+            var now = DateTime.UtcNow;
+            return new LeagueState(
+                Guid.NewGuid(),
+                now.ToString(),
+                "Automatically generated league",
+                now,
+                120000L
+            );
         }
     }
 }

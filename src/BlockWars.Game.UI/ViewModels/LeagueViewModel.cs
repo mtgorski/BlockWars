@@ -1,4 +1,4 @@
-﻿using BlockWars.GameState.Models;
+﻿using BlockWars.Game.UI.Models;
 using System.Collections.Generic;
 
 namespace BlockWars.Game.UI.ViewModels
@@ -6,7 +6,7 @@ namespace BlockWars.Game.UI.ViewModels
     public class LeagueViewModel
     {
         public long RemainingMilliseconds { get; set; }
-        public League League { get; set; }
-        public ICollection<Region> Regions { get; set; } 
+        public LeagueState League { get; set; }
+        public ICollection<RegionState> Regions { get; set; } 
     }
 }

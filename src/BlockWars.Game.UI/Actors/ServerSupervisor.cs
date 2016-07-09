@@ -2,8 +2,6 @@
 using System;
 using BlockWars.Game.UI.Commands;
 using BlockWars.GameState.Client;
-using BlockWars.GameState.Models;
-using System.Collections.Generic;
 using Akka.DI.Core;
 using BlockWars.Game.UI.Strategies;
 
@@ -58,17 +56,8 @@ namespace BlockWars.Game.UI.Actors
 
         private void InitializeLeague(bool initializingServer)
         {
-            var league = initializingServer ? _gameClient.GetCurrentLeagueAsync().GetAwaiter().GetResult() : null;
-            ICollection<Region> regions;
-            if (league == null)
-            {
-                league = _leagueStrategy.GetLeague();
-                regions = _regionsStrategy.GetRegions();
-            }
-            else
-            {
-                regions = _gameClient.GetRegionsAsync(league.LeagueId).GetAwaiter().GetResult();
-            }
+            var league = _leagueStrategy.GetLeague();
+            var regions = _regionsStrategy.GetRegions();
 
             var currentLeague = Context.ActorOf(Context.System.DI().Props<LeagueActor>(), league.LeagueId.ToString());
             currentLeague.Tell(new InitializeLeagueCommand(league));
