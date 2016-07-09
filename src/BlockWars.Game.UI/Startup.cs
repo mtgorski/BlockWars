@@ -52,12 +52,14 @@ namespace BlockWars.Game.UI
                 });
 
             services.AddSingleton<IServerManager, AkkaAdapter>();
+            services.AddTransient<AccomplishmentManager, AccomplishmentManager>();
 
             services.AddTransient<LeagueActor, LeagueActor>();
             services.AddSingleton<ServerSupervisor, ServerSupervisor>();
             services.AddSingleton<Broadcaster, Broadcaster>();
             services.AddTransient<DemoActor, DemoActor>();
-            services.AddTransient<LeaguePersistenceActor, LeaguePersistenceActor>();            
+            services.AddTransient<LeaguePersistenceActor, LeaguePersistenceActor>();
+            services.AddTransient<UserStatsActor, UserStatsActor>();       
         }
 
         public void Configure(IApplicationBuilder app,

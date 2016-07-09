@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using System;
+using System.Threading.Tasks;
 
 namespace BlockWars.Game.UI
 {
@@ -19,8 +20,22 @@ namespace BlockWars.Game.UI
             Guid leagueId;
             if(Guid.TryParse(leagueIdInput, out leagueId))
             {
-                _serverManager.BuildBlock(leagueId, regionName);
+                _serverManager.BuildBlock(leagueId, regionName, Context.ConnectionId);
             }
+        }
+
+        public override Task OnConnected()
+        {
+            _serverManager.AddStatsActor(Context.ConnectionId);
+
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            _serverManager.RemoveStatsActor(Context.ConnectionId);
+
+            return base.OnDisconnected(stopCalled);
         }
 
     }

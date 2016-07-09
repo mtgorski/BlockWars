@@ -19,6 +19,12 @@ label {
     margin: 10px;
 }
 
+.accomplishment-container {
+    border-style: solid;
+    border-color: #fff;
+    margin: 10px;
+}
+
 .block {
     height:1px;
     margin:1px;

@@ -87,6 +87,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 var region = _regions[x.RegionName];
                 _regions[x.RegionName] = region.AddBlocks(1);
+                Context.ActorSelection("akka://BlockWars/user/stats" + x.ConnectionId).Tell(new BlockBuiltMessage { ConnectionId = x.ConnectionId, LeagueId = _league.LeagueId });
             }
         }
 

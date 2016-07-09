@@ -85,7 +85,7 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
             Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
             var regionToBuildIn = fixture.AValidRegionName;
 
-            sut.Tell(new BuildBlockCommand(fixture.LeagueId, regionToBuildIn));
+            sut.Tell(new BuildBlockCommand(fixture.LeagueId, regionToBuildIn, ""));
 
             sut.Tell(new CheckStateCommand());
             var result = ExpectMsg<LeagueViewModel>().Regions.Single(x => regionToBuildIn == x.Name).BlockCount;
@@ -129,7 +129,7 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
 
             sut.Tell(new CheckStateCommand());
             var result = ExpectMsg<LeagueViewModel>().Regions.Single(x => x.Name == fixture.AValidRegionName).BlockCount;
-            sut.Tell(new BuildBlockCommand(fixture.LeagueId, fixture.AValidRegionName));
+            sut.Tell(new BuildBlockCommand(fixture.LeagueId, fixture.AValidRegionName, ""));
 
             Assert.Equal(0, result);
         }

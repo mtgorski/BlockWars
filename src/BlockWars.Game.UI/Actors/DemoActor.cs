@@ -52,7 +52,7 @@ namespace BlockWars.Game.UI.Actors
 
             for(int i = 0; i < _options.Value.DemoBlocksPerCommand; i++)
             {
-                _serverManager.BuildBlock(_currentLeague.Value.League.LeagueId, whichRegion.Name);
+                _serverManager.BuildBlock(_currentLeague.Value.League.LeagueId, whichRegion.Name, "");
             }            
         }
     }

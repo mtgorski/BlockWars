@@ -1,9 +1,18 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using BlockWars.Game.UI.Actors;
+using BlockWars.Game.UI.ViewModels;
+using Microsoft.AspNet.Mvc;
 
 namespace BlockWars.Game.UI.Controllers
 {
     public class GameController : Controller
     {
+        private AccomplishmentManager _accomplishmentManager;
+
+        public GameController(AccomplishmentManager accomplishmentManager)
+        {
+            _accomplishmentManager = accomplishmentManager;
+        }
+
         [HttpGet("")]
         public IActionResult Home()
         {
@@ -13,7 +22,7 @@ namespace BlockWars.Game.UI.Controllers
         [HttpGet("games")]
         public IActionResult CurrentGame()
         {
-            return View("League");
+            return View("League", new GamePageViewModel { NumberAccomplishments = _accomplishmentManager.GetCount() });
         }
 
     }

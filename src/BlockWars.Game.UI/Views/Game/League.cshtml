@@ -1,13 +1,27 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model BlockWars.Game.UI.ViewModels.GamePageViewModel
 @{
     Layout = @"~/Views/Shared/_Layout.cshtml";
 }
-<div id="time"></div>
-<div id="outcomeMessage"></div>
-<div id="gameContainer" class="row"></div>
-<div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
+<div class="col-md-2">
+    @for (int i = 0; i < Model.NumberAccomplishments; i++)
+    {
+        <div class="row accomplishment-container" data-rank="@(Model.NumberAccomplishments - i)"></div>
+    }
+    
+    @*<div class="row accomplishment-container">VII - World Builder</div>
+    <div class="row accomplishment-container">VI - Frenzied Finger</div>
+    <div class="row accomplishment-container">V - City Planner</div>
+    <div class="row accomplishment-container">IV - Architect</div>
+    <div class="row accomplishment-container">III - Mason</div>
+    <div class="row accomplishment-container">II - Lego Builder</div>
+    <div class="row accomplishment-container">I - Baby Builder</div>*@
+</div>
+<div class="col-md-10">
+    <div id="time"></div>
+    <div id="outcomeMessage"></div>
+    <div id="gameContainer" class="row"></div>
+    <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
+</div>
 <script src="/lib/jquery/js/jquery.js"></script>
 <script src="/lib/signalr/jquery.signalr.js"></script>
 <script src="/signalr/hubs"></script>
@@ -22,15 +36,21 @@
             $("#time").show();
             $("#outcomeMessage").hide();
             $("#gameContainer").empty();
+            $(".accomplishment-container").empty();
             currentGame = null;
         }
         $("#playAgainButton").click(playAgain);
-        
+
         gameHub.client.onGameEnd = function (message) {
             $("#gameOver").show();
             $("#time").hide();
             $("#gameContainer .build-button").prop('disabled', true).off('click');
             $("#outcomeMessage").text(message).show();
+        };
+
+        gameHub.client.onAchieve = function (achievement) {
+            $(".accomplishment-container[data-rank=" + achievement.Rank +"]").text(achievement.Text);
+
         };
 
         gameHub.client.updateRegionInfo = function (leagueInfo) {
@@ -43,11 +63,11 @@
             }
 
             $("#time").text(Math.floor(leagueInfo.RemainingMilliseconds / 1000));
-            
+
             $.each(leagueInfo.Regions, function () {
                 if ($("#" + this.RegionId).length === 0) {
                     var $newElement = $('<div>', { 'id': this.RegionId, 'class': 'region-container row' });
-                    var $hud = $('<div>', {'class':'row'});
+                    var $hud = $('<div>', { 'class': 'row' });
                     var $name = $('<div>', { 'class': 'region-name col-xs-6', 'style': 'font-size:30px' }).text(this.Name);
                     var name = this.Name;
                     var $click = $('<button>', { 'class': 'build-button col-xs-2' }).text('+').click(function () {
@@ -62,12 +82,10 @@
                     $blockDisplay = $('<div>', { 'class': 'block-display col-offset-xs-1 col-xs-9' });
 
                     var rows = 10;
-                    for (var i = rows; i > 0; i--)
-                    {
+                    for (var i = rows; i > 0; i--) {
                         var $row = $('<div>', { 'class': 'row' });
-                        for (var j = 0; j < 10; j++)
-                        {
-                            var $block = $('<div>', { 'class': 'block col-xs-1', 'data-number':i + j*10});
+                        for (var j = 0; j < 10; j++) {
+                            var $block = $('<div>', { 'class': 'block col-xs-1', 'data-number': i + j * 10 });
                             $row.append($block);
                         }
                         $blockDisplay.append($row);
