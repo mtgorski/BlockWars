@@ -10,6 +10,7 @@ namespace BlockWars.Game.UI.Actors
         private readonly IConnectionManager _connectionManager;
         private Dictionary<Guid, int> _leagueToCountMap = new Dictionary<Guid, int>();
         private AccomplishmentManager _accomplishmentManager;
+        private string _connectionId;
 
         public UserStatsActor(IConnectionManager connectionManager, AccomplishmentManager accomplishmentManger)
         {
@@ -36,6 +37,8 @@ namespace BlockWars.Game.UI.Actors
 
         private void OnBlockBuilt(BlockBuiltMessage x)
         {
+            _connectionId = x.ConnectionId;
+
             if(!_leagueToCountMap.ContainsKey(x.LeagueId))
             {
                 _leagueToCountMap[x.LeagueId] = 0;
@@ -50,5 +53,6 @@ namespace BlockWars.Game.UI.Actors
                 hub.Clients.Client(x.ConnectionId).onAchieve(accomplishment);
             }
         }
+
     }
 }

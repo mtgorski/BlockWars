@@ -45,6 +45,10 @@ namespace BlockWars.Game.UI.Actors
         private void Initialize(InitializeLeagueCommand x)
         {
             _league = x.LeagueData;
+            foreach(var region in x.Regions)
+            {
+                _regions[region.Name] = region;
+            }
             _clock = new Stopwatch();
             _clock.Start();
         }
@@ -87,7 +91,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 var region = _regions[x.RegionName];
                 _regions[x.RegionName] = region.AddBlocks(1);
-                Context.ActorSelection("akka://BlockWars/user/stats" + x.ConnectionId).Tell(new BlockBuiltMessage { ConnectionId = x.ConnectionId, LeagueId = _league.LeagueId });
+                Context.System.EventStream.Publish(new BlockBuiltMessage(x.ConnectionId, _league.LeagueId));
             }
         }
 

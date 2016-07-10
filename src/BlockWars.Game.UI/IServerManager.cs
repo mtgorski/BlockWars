@@ -9,7 +9,8 @@ namespace BlockWars.Game.UI
 
         void AddRegion(Guid leagueId, RegionState regionName);
 
-        void AddStatsActor(string connectionId);
-        void RemoveStatsActor(string connectionId);
+        void AddConnectedUser(string connectionId);
+
+        void RemoveConnectedUser(string connectionId);
     }
 }

@@ -50,10 +50,9 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
             {
                 var sut = _sys.ActorOf(Props.Create(() => new LeagueActor()));
 
-                var initCommand = new InitializeLeagueCommand(League);
+                var initCommand = new InitializeLeagueCommand(League, Regions);
                 sut.Tell(initCommand);
-                Regions.ForEach(x => sut.Tell(new AddRegionCommand(League.LeagueId, x)));
-
+          
                 return sut;
             }
         }

@@ -26,14 +26,14 @@ namespace BlockWars.Game.UI
 
         public override Task OnConnected()
         {
-            _serverManager.AddStatsActor(Context.ConnectionId);
+            _serverManager.AddConnectedUser(Context.ConnectionId);
 
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            _serverManager.RemoveStatsActor(Context.ConnectionId);
+            _serverManager.RemoveConnectedUser(Context.ConnectionId);
 
             return base.OnDisconnected(stopCalled);
         }

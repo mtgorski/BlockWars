@@ -22,7 +22,7 @@ namespace BlockWars.Game.UI.Actors
             _leagueStrategy = newLeagueStrategy;
             _regionsStrategy = newRegionsStrategy;
 
-            InitializeLeague(true);
+            InitializeLeague();
 
             Context.System.Scheduler.ScheduleTellRepeatedly(
                 TimeSpan.FromSeconds(0),
@@ -40,7 +40,8 @@ namespace BlockWars.Game.UI.Actors
 
             Receive<LeagueEndedMessage>(x =>
             {
-                InitializeLeague(false);
+                Context.Sender.Tell(PoisonPill.Instance);
+                InitializeLeague();
                 return true;
             });
         }
@@ -54,18 +55,13 @@ namespace BlockWars.Game.UI.Actors
             }
         }
 
-        private void InitializeLeague(bool initializingServer)
+        private void InitializeLeague()
         {
             var league = _leagueStrategy.GetLeague();
             var regions = _regionsStrategy.GetRegions();
 
             var currentLeague = Context.ActorOf(Context.System.DI().Props<LeagueActor>(), league.LeagueId.ToString());
-            currentLeague.Tell(new InitializeLeagueCommand(league));
-            foreach (var region in regions)
-            {
-                currentLeague.Tell(new AddRegionCommand(league.LeagueId, region));
-            }
-
+            currentLeague.Tell(new InitializeLeagueCommand(league, regions));
         }
 
     }
