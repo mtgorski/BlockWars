@@ -2,7 +2,7 @@
 
 namespace BlockWars.Game.UI.Actors
 {
-    internal class BlockBuiltMessage
+    public class BlockBuiltMessage
     {
         public BlockBuiltMessage(string connectionId, Guid leagueId)
         {

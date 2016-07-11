@@ -17,7 +17,7 @@ namespace BlockWars.Game.UI
             var broadcaster = actorSystem.ActorOf(actorSystem.DI().Props<Broadcaster>(), "broadcaster");
             var demo = actorSystem.ActorOf(actorSystem.DI().Props<DemoActor>(), "demo");
             var saver = actorSystem.ActorOf(actorSystem.DI().Props<LeaguePersistenceActor>(), "saver");
-            var statsSupervisor = actorSystem.ActorOf(actorSystem.DI().Props<UserStatsSupervisorActor>(), "userStatsSupervisor");
+            var statsSupervisor = actorSystem.ActorOf(actorSystem.DI().Props<PlayerSupervisor>(), "playerSupervisor");
 
             actorSystem.EventStream.Subscribe(broadcaster, typeof(LeagueViewModel));
             actorSystem.EventStream.Subscribe(demo, typeof(LeagueViewModel));
@@ -28,7 +28,6 @@ namespace BlockWars.Game.UI
 
             actorSystem.EventStream.Subscribe(statsSupervisor, typeof(UserConnectedMessage));
             actorSystem.EventStream.Subscribe(statsSupervisor, typeof(UserDisconnectedMessage));
-            actorSystem.EventStream.Subscribe(statsSupervisor, typeof(BlockBuiltMessage));
         }
     }
 }

@@ -91,7 +91,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 var region = _regions[x.RegionName];
                 _regions[x.RegionName] = region.AddBlocks(1);
-                Context.System.EventStream.Publish(new BlockBuiltMessage(x.ConnectionId, _league.LeagueId));
+                Sender.Tell(new BlockBuiltMessage(x.ConnectionId, _league.LeagueId));
             }
         }
 

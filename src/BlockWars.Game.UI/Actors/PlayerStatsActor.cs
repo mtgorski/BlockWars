@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace BlockWars.Game.UI.Actors
 {
-    public class UserStatsActor : ReceiveActor
+    public class PlayerStatsActor : ReceiveActor
     {
         private readonly IConnectionManager _connectionManager;
         private Dictionary<Guid, int> _leagueToCountMap = new Dictionary<Guid, int>();
         private AccomplishmentManager _accomplishmentManager;
         private string _connectionId;
 
-        public UserStatsActor(IConnectionManager connectionManager, AccomplishmentManager accomplishmentManger)
+        public PlayerStatsActor(IConnectionManager connectionManager, AccomplishmentManager accomplishmentManger)
         {
             _connectionManager = connectionManager;
             _accomplishmentManager = accomplishmentManger;

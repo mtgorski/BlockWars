@@ -84,7 +84,10 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
             Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
             var regionToBuildIn = fixture.AValidRegionName;
 
-            sut.Tell(new BuildBlockCommand(fixture.LeagueId, regionToBuildIn, ""));
+            sut.Tell(new BuildBlockCommand(fixture.LeagueId, regionToBuildIn, "123"));
+            var reply = ExpectMsg<BlockBuiltMessage>();
+            var expectedReply = new BlockBuiltMessage("123", fixture.LeagueId).AsSource().OfLikeness<BlockBuiltMessage>();
+            expectedReply.ShouldEqual(reply);
 
             sut.Tell(new CheckStateCommand());
             var result = ExpectMsg<LeagueViewModel>().Regions.Single(x => regionToBuildIn == x.Name).BlockCount;

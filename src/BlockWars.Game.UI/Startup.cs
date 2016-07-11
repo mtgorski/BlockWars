@@ -59,8 +59,9 @@ namespace BlockWars.Game.UI
             services.AddSingleton<Broadcaster, Broadcaster>();
             services.AddTransient<DemoActor, DemoActor>();
             services.AddTransient<LeaguePersistenceActor, LeaguePersistenceActor>();
-            services.AddTransient<UserStatsActor, UserStatsActor>();
-            services.AddSingleton<UserStatsSupervisorActor, UserStatsSupervisorActor>();      
+            services.AddTransient<PlayerStatsActor, PlayerStatsActor>();
+            services.AddSingleton<PlayerSupervisor, PlayerSupervisor>();
+            services.AddTransient<PlayerActor, PlayerActor>();  
         }
 
         public void Configure(IApplicationBuilder app,
