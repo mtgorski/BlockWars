@@ -213,3 +213,4 @@ ModelManifest.xml
 
 /src/BlockWars.Game.UI/wwwroot/lib
 /src/BlockWars.Game.UI/Properties/PublishProfiles
+/src/BlockWars.Game.UI/Properties/launchSettings.json
