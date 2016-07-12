@@ -13,15 +13,15 @@ using Xunit;
 
 namespace BlockWars.Game.UI.Unit.Tests.Actors
 {
-    public class LeagueActorTests : TestKit
+    public class GameActorTests : TestKit
     {
-        class LeagueActorFixture
+        class GameActorFixture
         {
             private ActorSystem _sys;
 
-            public LeagueState League { get; private set; }
+            public Models.GameState Game { get; private set; }
             public List<RegionState> Regions { get; private set; }
-            public Guid LeagueId { get { return League.LeagueId; } }
+            public Guid LeagueId { get { return Game.GameId; } }
             public string AValidRegionName
             {
                 get
@@ -30,10 +30,10 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
                 }
             }
 
-            public LeagueActorFixture(ActorSystem sys)
+            public GameActorFixture(ActorSystem sys)
             {
                 _sys = sys;
-                League = new LeagueState(Guid.NewGuid(), "TestLeague", "LeagueForTesting", DateTime.UtcNow, 10000);
+                Game = new Models.GameState(Guid.NewGuid(), "TestLeague", "LeagueForTesting", DateTime.UtcNow, 10000);
                 Regions = new List<RegionState>
                 {
                     new RegionState("TestRegion1"),
@@ -43,14 +43,14 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
 
             public void UseShortDuration()
             {
-                League = new LeagueState(Guid.NewGuid(), "TestLeague", "LeagueForTesting", DateTime.UtcNow, 10);
+                Game = new Models.GameState(Guid.NewGuid(), "TestLeague", "LeagueForTesting", DateTime.UtcNow, 10);
             }
 
             public IActorRef GetInitializedSut()
             {
-                var sut = _sys.ActorOf(Props.Create(() => new LeagueActor()));
+                var sut = _sys.ActorOf(Props.Create(() => new GameActor()));
 
-                var initCommand = new InitializeLeagueCommand(League, Regions);
+                var initCommand = new InitializeGameCommand(Game, Regions);
                 sut.Tell(initCommand);
           
                 return sut;
@@ -61,27 +61,27 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
         [Fact]
         public void ShouldPublishItsState_WhenToldToCheckItAndNotExpired()
         {
-            var fixture = new LeagueActorFixture(Sys);
+            var fixture = new GameActorFixture(Sys);
             var sut = fixture.GetInitializedSut();
-            Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
 
             sut.Tell(new CheckStateCommand());
 
-            var expected = new LeagueViewModel(0, fixture.League, fixture.Regions)
-                .AsSource().OfLikeness<LeagueViewModel>()
+            var expected = new GameViewModel(0, fixture.Game, fixture.Regions)
+                .AsSource().OfLikeness<GameViewModel>()
                 .Without(x => x.RemainingMilliseconds)
                 .With(x => x.Regions)
                 .EqualsWhen((x, y) => x.Regions.Count == y.Regions.Count && x.Regions.All(z => y.Regions.Single(a => a.RegionId == z.RegionId).Equals(z)));
-            var result = ExpectMsg<LeagueViewModel>();
+            var result = ExpectMsg<GameViewModel>();
             expected.ShouldEqual(result);
         }
 
         [Fact]
         public void ShouldPublishAnIncrementedBlockCount_WhenToldToBuildABlock()
         {
-            var fixture = new LeagueActorFixture(Sys);
+            var fixture = new GameActorFixture(Sys);
             var sut = fixture.GetInitializedSut();
-            Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
             var regionToBuildIn = fixture.AValidRegionName;
 
             sut.Tell(new BuildBlockCommand(fixture.LeagueId, regionToBuildIn, "123"));
@@ -90,7 +90,7 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
             expectedReply.ShouldEqual(reply);
 
             sut.Tell(new CheckStateCommand());
-            var result = ExpectMsg<LeagueViewModel>().Regions.Single(x => regionToBuildIn == x.Name).BlockCount;
+            var result = ExpectMsg<GameViewModel>().Regions.Single(x => regionToBuildIn == x.Name).BlockCount;
             Assert.Equal(1, result);
         }
 
@@ -98,7 +98,7 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
         {
             public MutationActor()
             {
-                Receive<LeagueViewModel>(x =>
+                Receive<GameViewModel>(x =>
                 {
                     x.Regions.Add(new RegionState());
                     return true;
@@ -110,27 +110,27 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
         [Fact]
         public void ShouldPublishAnImmutableState_vCollectionCantBeModified()
         {
-            var fixture = new LeagueActorFixture(Sys);
+            var fixture = new GameActorFixture(Sys);
             var sut = fixture.GetInitializedSut();
             var mutator = Sys.ActorOf(Props.Create(() => new MutationActor()));
-            Sys.EventStream.Subscribe(mutator, typeof(LeagueViewModel));
-            Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
+            Sys.EventStream.Subscribe(mutator, typeof(GameViewModel));
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
 
             sut.Tell(new CheckStateCommand());
             Thread.Sleep(100);
-            var result = ExpectMsg<LeagueViewModel>();
+            var result = ExpectMsg<GameViewModel>();
             Assert.Equal(2, result.Regions.Count);
         }
 
         [Fact]
         public void ShouldPublishAnImmutableState_vShouldntPickUpNewChanges()
         {
-            var fixture = new LeagueActorFixture(Sys);
+            var fixture = new GameActorFixture(Sys);
             var sut = fixture.GetInitializedSut();
-            Sys.EventStream.Subscribe(TestActor, typeof(LeagueViewModel));
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
 
             sut.Tell(new CheckStateCommand());
-            var result = ExpectMsg<LeagueViewModel>().Regions.Single(x => x.Name == fixture.AValidRegionName).BlockCount;
+            var result = ExpectMsg<GameViewModel>().Regions.Single(x => x.Name == fixture.AValidRegionName).BlockCount;
             sut.Tell(new BuildBlockCommand(fixture.LeagueId, fixture.AValidRegionName, ""));
 
             Assert.Equal(0, result);
@@ -139,15 +139,15 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
         [Fact]
         public void ShouldPublishALeagueEndedMessageWhenGameOver()
         {
-            var fixture = new LeagueActorFixture(Sys);
+            var fixture = new GameActorFixture(Sys);
             fixture.UseShortDuration();
             var sut = fixture.GetInitializedSut();
-            Sys.EventStream.Subscribe(TestActor, typeof(LeagueEndedMessage));
+            Sys.EventStream.Subscribe(TestActor, typeof(GameEndedMessage));
 
-            Thread.Sleep((int)fixture.League.Duration + 10);
+            Thread.Sleep((int)fixture.Game.Duration + 10);
             sut.Tell(new CheckStateCommand());
 
-            var result = ExpectMsg<LeagueEndedMessage>();
+            var result = ExpectMsg<GameEndedMessage>();
             Assert.NotNull(result);
         }
     }

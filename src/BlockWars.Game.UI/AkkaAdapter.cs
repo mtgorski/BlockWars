@@ -19,9 +19,9 @@ namespace BlockWars.Game.UI
             _actorSystem = actorSystem; 
         }
 
-        public void AddRegion(Guid leagueId, RegionState region, string connectionId)
+        public void AddRegion(Guid gameId, RegionState region, string connectionId)
         {
-            _actorSystem.ActorSelection("/user/playerSupervisor/player" + connectionId).Tell(new AddRegionCommand(leagueId, region));
+            _actorSystem.ActorSelection("/user/playerSupervisor/player" + connectionId).Tell(new AddRegionCommand(gameId, region));
         }
 
         public void AddConnectedUser(string connectionId)
@@ -29,9 +29,9 @@ namespace BlockWars.Game.UI
             _actorSystem.EventStream.Publish(new UserConnectedMessage(connectionId));
         }
 
-        public void BuildBlock(Guid leagueId, string regionName, string connectionId)
+        public void BuildBlock(Guid gameId, string regionName, string connectionId)
         {
-            var command = new BuildBlockCommand(leagueId, regionName, connectionId);
+            var command = new BuildBlockCommand(gameId, regionName, connectionId);
             _actorSystem.ActorSelection("/user/playerSupervisor/player" + connectionId).Tell(command);
         }
 

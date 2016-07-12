@@ -53,18 +53,18 @@
 
         };
 
-        gameHub.client.updateRegionInfo = function (leagueInfo) {
+        gameHub.client.updateRegionInfo = function (gameInfo) {
 
             if (currentGame == null) {
-                currentGame = leagueInfo.League.LeagueId;
+                currentGame = gameInfo.Game.GameId;
             }
-            if (currentGame != leagueInfo.League.LeagueId) {
+            if (currentGame != gameInfo.Game.GameId) {
                 return;
             }
 
-            $("#time").text(Math.floor(leagueInfo.RemainingMilliseconds / 1000));
+            $("#time").text(Math.floor(gameInfo.RemainingMilliseconds / 1000));
 
-            $.each(leagueInfo.Regions, function () {
+            $.each(gameInfo.Regions, function () {
                 if ($("#" + this.RegionId).length === 0) {
                     var $newElement = $('<div>', { 'id': this.RegionId, 'class': 'region-container row' });
                     var $hud = $('<div>', { 'class': 'row' });

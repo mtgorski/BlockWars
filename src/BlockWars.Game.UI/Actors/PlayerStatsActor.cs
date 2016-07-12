@@ -8,7 +8,7 @@ namespace BlockWars.Game.UI.Actors
     public class PlayerStatsActor : ReceiveActor
     {
         private readonly IConnectionManager _connectionManager;
-        private Dictionary<Guid, int> _leagueToCountMap = new Dictionary<Guid, int>();
+        private Dictionary<Guid, int> _gameToCountMap = new Dictionary<Guid, int>();
         private AccomplishmentManager _accomplishmentManager;
         private string _connectionId;
 
@@ -23,28 +23,28 @@ namespace BlockWars.Game.UI.Actors
                 return true;
             });
 
-            Receive<LeagueEndedMessage>(x =>
+            Receive<GameEndedMessage>(x =>
             {
-                OnLeagueEnd(x);
+                OnGameEnd(x);
                 return true;
             });
         }
 
-        private void OnLeagueEnd(LeagueEndedMessage x)
+        private void OnGameEnd(GameEndedMessage x)
         {
-            _leagueToCountMap.Remove(x.LeagueId);
+            _gameToCountMap.Remove(x.GameId);
         }
 
         private void OnBlockBuilt(BlockBuiltMessage x)
         {
             _connectionId = x.ConnectionId;
 
-            if(!_leagueToCountMap.ContainsKey(x.LeagueId))
+            if(!_gameToCountMap.ContainsKey(x.GameId))
             {
-                _leagueToCountMap[x.LeagueId] = 0;
+                _gameToCountMap[x.GameId] = 0;
             }
 
-            var blockCount = ++_leagueToCountMap[x.LeagueId];
+            var blockCount = ++_gameToCountMap[x.GameId];
 
             var accomplishment = _accomplishmentManager.GetAccomplishment(blockCount);
             if(accomplishment != null)

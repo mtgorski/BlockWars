@@ -5,12 +5,12 @@ namespace BlockWars.Game.UI.Commands
 {
     public class AddRegionCommand
     {
-        public Guid LeagueId { get; private set; }
+        public Guid GameId { get; private set; }
         public RegionState Region { get; private set; }
 
-        public AddRegionCommand(Guid leagueId, RegionState region)
+        public AddRegionCommand(Guid gameId, RegionState region)
         {
-            LeagueId = leagueId;
+            GameId = gameId;
             Region = region;
         }
     }

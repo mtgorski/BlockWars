@@ -34,7 +34,7 @@ namespace BlockWars.Game.UI
             services.Configure<GameDuration>(config);
 
             services.AddSingleton<IGameStateClient, NullGameClient>();
-            services.AddTransient<INewLeagueFactory, HardCodedLeagueFactory>();
+            services.AddTransient<INewGameFactory, HardCodedGameFactory>();
             services.AddTransient<INewRegionsFactory, HardCodedRegionsFactory>();
 
             services.AddSignalR(
@@ -54,11 +54,11 @@ namespace BlockWars.Game.UI
             services.AddSingleton<IServerManager, AkkaAdapter>();
             services.AddTransient<AccomplishmentManager, AccomplishmentManager>();
 
-            services.AddTransient<LeagueActor, LeagueActor>();
+            services.AddTransient<GameActor, GameActor>();
             services.AddSingleton<ServerSupervisor, ServerSupervisor>();
             services.AddSingleton<Broadcaster, Broadcaster>();
             services.AddTransient<DemoActor, DemoActor>();
-            services.AddTransient<LeaguePersistenceActor, LeaguePersistenceActor>();
+            services.AddTransient<GamePersistenceActor, GamePersistenceActor>();
             services.AddTransient<PlayerStatsActor, PlayerStatsActor>();
             services.AddSingleton<PlayerSupervisor, PlayerSupervisor>();
             services.AddTransient<PlayerActor, PlayerActor>();  

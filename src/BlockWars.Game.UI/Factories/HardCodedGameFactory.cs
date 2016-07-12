@@ -5,22 +5,22 @@ using System;
 
 namespace BlockWars.Game.UI.Strategies
 {
-    public class HardCodedLeagueFactory : INewLeagueFactory
+    public class HardCodedGameFactory : INewGameFactory
     {
         private readonly IOptions<GameDuration> _options;
 
-        public HardCodedLeagueFactory(IOptions<GameDuration> options)
+        public HardCodedGameFactory(IOptions<GameDuration> options)
         {
             _options = options;
         }
 
-        public LeagueState GetLeague()
+        public Models.GameState GetGameState()
         {
             var now = DateTime.UtcNow;
-            return new LeagueState(
+            return new Models.GameState(
                 Guid.NewGuid(),
                 now.ToString(),
-                "Automatically generated league",
+                "Automatically generated game",
                 now,
                 120000L
             );

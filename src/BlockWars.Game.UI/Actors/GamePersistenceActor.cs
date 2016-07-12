@@ -5,31 +5,31 @@ using BlockWars.GameState.Models;
 
 namespace BlockWars.Game.UI.Actors
 {
-    public class LeaguePersistenceActor : ReceiveActor
+    public class GamePersistenceActor : ReceiveActor
     {
         private readonly IGameStateClient _client;
          
-        public LeaguePersistenceActor(IGameStateClient client)
+        public GamePersistenceActor(IGameStateClient client)
         {
             _client = client;
 
-            Receive<LeagueEndedMessage>(async x =>
+            Receive<GameEndedMessage>(async x =>
             {
-                await SaveLeagueAsync(x);               
+                await SaveGameAsync(x);               
             });
         }
 
-        private async Task SaveLeagueAsync(LeagueEndedMessage x)
+        private async Task SaveGameAsync(GameEndedMessage x)
         {
             var league = new League
             {
-                CreatedAt = x.FinalState.League.CreatedAt,
-                Description = x.FinalState.League.Description,
-                Duration = x.FinalState.League.Duration,
-                LeagueId = x.FinalState.League.LeagueId,
-                Name = x.FinalState.League.Name
+                CreatedAt = x.FinalState.Game.CreatedAt,
+                Description = x.FinalState.Game.Description,
+                Duration = x.FinalState.Game.Duration,
+                LeagueId = x.FinalState.Game.GameId,
+                Name = x.FinalState.Game.Name
             };
-            await _client.PutLeagueAsync(x.FinalState.League.LeagueId, league);
+            await _client.PutLeagueAsync(x.FinalState.Game.GameId, league);
 
             // TODO: make this less chatty by adding a bulk API
             foreach(var region in x.FinalState.Regions)
@@ -40,7 +40,7 @@ namespace BlockWars.Game.UI.Actors
                     Name = region.Name,
                     RegionId = region.RegionId
                 };
-                await _client.PutRegionAsync(x.FinalState.League.LeagueId, apiRegion.RegionId, apiRegion);
+                await _client.PutRegionAsync(x.FinalState.Game.GameId, apiRegion.RegionId, apiRegion);
             }
         }
     }

@@ -2,8 +2,8 @@
 
 namespace BlockWars.Game.UI.Strategies
 {
-    public interface INewLeagueFactory
+    public interface INewGameFactory
     {
-        LeagueState GetLeague();
+        Models.GameState GetGameState();
     }
 }

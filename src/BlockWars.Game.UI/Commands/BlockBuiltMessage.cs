@@ -4,13 +4,13 @@ namespace BlockWars.Game.UI.Actors
 {
     public class BlockBuiltMessage
     {
-        public BlockBuiltMessage(string connectionId, Guid leagueId)
+        public BlockBuiltMessage(string connectionId, Guid gameId)
         {
             ConnectionId = connectionId;
-            LeagueId = leagueId;
+            GameId = gameId;
         }
 
-        public string ConnectionId { get; internal set; }
-        public Guid LeagueId { get; internal set; }
+        public string ConnectionId { get; }
+        public Guid GameId { get; }
     }
 }

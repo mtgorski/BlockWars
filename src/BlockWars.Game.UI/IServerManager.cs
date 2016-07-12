@@ -5,9 +5,9 @@ namespace BlockWars.Game.UI
 {
     public interface IServerManager
     {
-        void BuildBlock(Guid leagueId, string regionName, string connectionId);
+        void BuildBlock(Guid gameId, string regionName, string connectionId);
 
-        void AddRegion(Guid leagueId, RegionState regionName, string connectionId);
+        void AddRegion(Guid gameId, RegionState regionName, string connectionId);
 
         void AddConnectedUser(string connectionId);
 

@@ -11,42 +11,42 @@ namespace BlockWars.Game.UI.Actors
     { 
         private readonly IGameStateClient _gameClient;
         private readonly INewRegionsFactory _regionsStrategy;
-        private readonly INewLeagueFactory _leagueStrategy;
+        private readonly INewGameFactory _gameStrategy;
 
         public ServerSupervisor(
             IGameStateClient gameClient,
-            INewLeagueFactory newLeagueStrategy,
+            INewGameFactory newGameStrategy,
             INewRegionsFactory newRegionsStrategy)
         {
             _gameClient = gameClient;
-            _leagueStrategy = newLeagueStrategy;
+            _gameStrategy = newGameStrategy;
             _regionsStrategy = newRegionsStrategy;
 
-            InitializeLeague();
+            InitializeGames();
 
             Context.System.Scheduler.ScheduleTellRepeatedly(
                 TimeSpan.FromSeconds(0),
                 TimeSpan.FromMilliseconds(15),
                 Context.Self,
-                new PingLeaguesCommand(),
+                new PingGamesCommand(),
                 Context.Self);
 
 
-            Receive<PingLeaguesCommand>(x =>
+            Receive<PingGamesCommand>(x =>
             {
-                PingLeagues(x);
+                PingGames(x);
                 return true;
             });
 
-            Receive<LeagueEndedMessage>(x =>
+            Receive<GameEndedMessage>(x =>
             {
                 Context.Sender.Tell(PoisonPill.Instance);
-                InitializeLeague();
+                InitializeGames();
                 return true;
             });
         }
 
-        private void PingLeagues(PingLeaguesCommand x)
+        private void PingGames(PingGamesCommand x)
         {
             var children = Context.GetChildren();
             foreach(var child in children)
@@ -55,13 +55,13 @@ namespace BlockWars.Game.UI.Actors
             }
         }
 
-        private void InitializeLeague()
+        private void InitializeGames()
         {
-            var league = _leagueStrategy.GetLeague();
+            var game = _gameStrategy.GetGameState();
             var regions = _regionsStrategy.GetRegions();
 
-            var currentLeague = Context.ActorOf(Context.System.DI().Props<LeagueActor>(), league.LeagueId.ToString());
-            currentLeague.Tell(new InitializeLeagueCommand(league, regions));
+            var currentGame = Context.ActorOf(Context.System.DI().Props<GameActor>(), game.GameId.ToString());
+            currentGame.Tell(new InitializeGameCommand(game, regions));
         }
 
     }

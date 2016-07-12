@@ -5,17 +5,17 @@ using System.Linq;
 
 namespace BlockWars.Game.UI.ViewModels
 {
-    public struct LeagueViewModel
+    public struct GameViewModel
     {
 
         public long RemainingMilliseconds { get; }
-        public LeagueState League { get; }
+        public Models.GameState Game { get; }
         public ImmutableList<RegionState> Regions{ get; }
 
-        public LeagueViewModel(long remainingMilliseconds, LeagueState league, IEnumerable<RegionState> regions)
+        public GameViewModel(long remainingMilliseconds, Models.GameState game, IEnumerable<RegionState> regions)
         {
             RemainingMilliseconds = remainingMilliseconds;
-            League = league;
+            Game = game;
             Regions = regions.ToImmutableList();
         }
     }

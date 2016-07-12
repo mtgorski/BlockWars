@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace BlockWars.Game.UI.Commands
 {
-    public class InitializeLeagueCommand
+    public class InitializeGameCommand
     {
-        public LeagueState LeagueData { get;  }
+        public Models.GameState GameData { get;  }
         public IEnumerable<RegionState> Regions { get; }
 
-        public InitializeLeagueCommand(LeagueState league, IEnumerable<RegionState> regions)
+        public InitializeGameCommand(Models.GameState game, IEnumerable<RegionState> regions)
         {
-            LeagueData = league;
+            GameData = game;
             Regions = regions;
         }
     }

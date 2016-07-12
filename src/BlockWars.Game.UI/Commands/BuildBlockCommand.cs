@@ -4,13 +4,13 @@ namespace BlockWars.Game.UI
 {
     public class BuildBlockCommand
     {
-        public Guid LeagueId { get; }
+        public Guid GameId { get; }
         public string RegionName { get; }
         public string ConnectionId { get; }
 
-        public BuildBlockCommand(Guid leagueId, string regionName, string connectionId)
+        public BuildBlockCommand(Guid gameId, string regionName, string connectionId)
         {
-            LeagueId = leagueId;
+            GameId = gameId;
             RegionName = regionName;
             ConnectionId = connectionId;
         }

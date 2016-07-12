@@ -14,20 +14,20 @@ namespace BlockWars.Game.UI
         {
             _connectionManager = connectionManager;
 
-            Receive<LeagueViewModel>(x =>
+            Receive<GameViewModel>(x =>
             {
                 BroadcastState(x);
                 return true;
             });
 
-            Receive<LeagueEndedMessage>(x =>
+            Receive<GameEndedMessage>(x =>
             {
                 BroadcastEnd(x);
                 return true;
             });
         }
 
-        private void BroadcastEnd(LeagueEndedMessage endMessage)
+        private void BroadcastEnd(GameEndedMessage endMessage)
         {
             var hub = _connectionManager.GetHubContext<GameHub>();
             var orderedRegions = endMessage.FinalState.Regions.OrderByDescending(x => x.BlockCount);
@@ -48,10 +48,10 @@ namespace BlockWars.Game.UI
             hub.Clients.All.onGameEnd(message);
         }
 
-        private void BroadcastState(LeagueViewModel currentLeague)
+        private void BroadcastState(GameViewModel currentGame)
         {
             var hub = _connectionManager.GetHubContext<GameHub>();
-            hub.Clients.All.updateRegionInfo(currentLeague);
+            hub.Clients.All.updateRegionInfo(currentGame);
         }
     }
 }

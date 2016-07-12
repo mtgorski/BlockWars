@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace BlockWars.Game.UI.Actors
 {
-    public class LeagueActor : ReceiveActor
+    public class GameActor : ReceiveActor
     {
         private Dictionary<string, RegionState> _regions = new Dictionary<string, RegionState>();
-        private LeagueState _league;
+        private Models.GameState _gameState;
         private bool _expired;
         private Stopwatch _clock;
 
-        public LeagueActor()
+        public GameActor()
         {
             Receive<AddRegionCommand>(x =>
             {
@@ -35,16 +35,16 @@ namespace BlockWars.Game.UI.Actors
                 return true;
             });
 
-            Receive<InitializeLeagueCommand>(x =>
+            Receive<InitializeGameCommand>(x =>
             {
                 Initialize(x);
                 return true;
             });
         }
 
-        private void Initialize(InitializeLeagueCommand x)
+        private void Initialize(InitializeGameCommand x)
         {
-            _league = x.LeagueData;
+            _gameState = x.GameData;
             foreach(var region in x.Regions)
             {
                 _regions[region.Name] = region;
@@ -59,7 +59,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 _clock.Stop();
                 _expired = true;
-                var endingMessage = new LeagueEndedMessage(_league.LeagueId, GetCurrentView());
+                var endingMessage = new GameEndedMessage(_gameState.GameId, GetCurrentView());
                 Context.System.EventStream.Publish(endingMessage);
             }
             else
@@ -71,7 +71,7 @@ namespace BlockWars.Game.UI.Actors
 
         private bool ShouldBeExpired()
         {
-            return _clock.ElapsedMilliseconds > _league.Duration && !_expired;
+            return _clock.ElapsedMilliseconds > _gameState.Duration && !_expired;
         }
 
         private void PublishCurrentState()
@@ -80,12 +80,12 @@ namespace BlockWars.Game.UI.Actors
             Context.System.EventStream.Publish(currentState);
         }
 
-        private LeagueViewModel GetCurrentView()
+        private GameViewModel GetCurrentView()
         {
-            return new LeagueViewModel
+            return new GameViewModel
             (
-                _league.Duration - _clock.ElapsedMilliseconds,
-                _league,
+                _gameState.Duration - _clock.ElapsedMilliseconds,
+                _gameState,
                 _regions.Values.ToList()
             );
         }
@@ -96,7 +96,7 @@ namespace BlockWars.Game.UI.Actors
             {
                 var region = _regions[x.RegionName];
                 _regions[x.RegionName] = region.AddBlocks(1);
-                Sender.Tell(new BlockBuiltMessage(x.ConnectionId, _league.LeagueId));
+                Sender.Tell(new BlockBuiltMessage(x.ConnectionId, _gameState.GameId));
             }
         }
 

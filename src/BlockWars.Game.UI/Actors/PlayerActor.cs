@@ -20,7 +20,7 @@ namespace BlockWars.Game.UI.Actors
             });
 
             var statsActor = Context.ActorOf(Context.System.DI().Props<PlayerStatsActor>(), "stats");
-            Context.System.EventStream.Subscribe(statsActor, typeof(LeagueEndedMessage));
+            Context.System.EventStream.Subscribe(statsActor, typeof(GameEndedMessage));
         }
 
         private void OnBlockBuilt(BlockBuiltMessage x)
@@ -30,7 +30,7 @@ namespace BlockWars.Game.UI.Actors
 
         private void BuildBlock(BuildBlockCommand command)
         {
-            Context.System.ActorSelection("/user/supervisor/" + command.LeagueId.ToString()).Tell(command);
+            Context.System.ActorSelection("/user/supervisor/" + command.GameId.ToString()).Tell(command);
         }
     }
 }

@@ -15,12 +15,12 @@ namespace BlockWars.Game.UI
             _serverManager = serverManager;
         }
 
-        public void BuildBlock(string leagueIdInput, string regionName)
+        public void BuildBlock(string gameIdInput, string regionName)
         {
-            Guid leagueId;
-            if(Guid.TryParse(leagueIdInput, out leagueId))
+            Guid gameId;
+            if(Guid.TryParse(gameIdInput, out gameId))
             {
-                _serverManager.BuildBlock(leagueId, regionName, Context.ConnectionId);
+                _serverManager.BuildBlock(gameId, regionName, Context.ConnectionId);
             }
         }
 

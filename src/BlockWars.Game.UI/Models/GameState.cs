@@ -2,9 +2,9 @@
 
 namespace BlockWars.Game.UI.Models
 {
-    public struct LeagueState
+    public struct GameState
     {
-        public Guid LeagueId { get; }
+        public Guid GameId { get; }
 
         public string Name { get; }
 
@@ -14,9 +14,9 @@ namespace BlockWars.Game.UI.Models
 
         public long Duration { get; }
 
-        public LeagueState(Guid leagueId, string name, string description, DateTime createdAt, long duration)
+        public GameState(Guid gameId, string name, string description, DateTime createdAt, long duration)
         {
-            LeagueId = leagueId;
+            GameId = gameId;
             Name = name;
             Description = description;
             CreatedAt = createdAt;
