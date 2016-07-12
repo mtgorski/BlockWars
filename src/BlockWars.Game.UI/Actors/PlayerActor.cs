@@ -1,5 +1,4 @@
-﻿using System;
-using Akka.Actor;
+﻿using Akka.Actor;
 using Akka.DI.Core;
 
 namespace BlockWars.Game.UI.Actors

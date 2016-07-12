@@ -55,23 +55,28 @@ namespace BlockWars.Game.UI.Actors
 
         private void CheckState(CheckStateCommand x)
         {
-            if (_clock.ElapsedMilliseconds > _league.Duration && !_expired)
+            if (ShouldBeExpired())
             {
                 _clock.Stop();
                 _expired = true;
-                NotifySubscribers();
-                Context.System.EventStream.Publish(new LeagueEndedMessage(_league.LeagueId, GetCurrentView()));
+                var endingMessage = new LeagueEndedMessage(_league.LeagueId, GetCurrentView());
+                Context.System.EventStream.Publish(endingMessage);
             }
-
-            if (!_expired)
+            else
             {
-                NotifySubscribers();
+                PublishCurrentState();
             }
+             
         }
 
-        private void NotifySubscribers()
+        private bool ShouldBeExpired()
         {
-            LeagueViewModel currentState = GetCurrentView();
+            return _clock.ElapsedMilliseconds > _league.Duration && !_expired;
+        }
+
+        private void PublishCurrentState()
+        {
+            var currentState = GetCurrentView();
             Context.System.EventStream.Publish(currentState);
         }
 
