@@ -10,7 +10,7 @@ namespace BlockWars.Game.UI.Actors
 {
     public class GameActor : ReceiveActor
     {
-        private Dictionary<string, RegionState> _regions = new Dictionary<string, RegionState>();
+        private readonly Dictionary<string, RegionState> _regions = new Dictionary<string, RegionState>();
         private Models.GameState _gameState;
         private bool _expired;
         private Stopwatch _clock;
@@ -42,10 +42,10 @@ namespace BlockWars.Game.UI.Actors
             });
         }
 
-        private void Initialize(InitializeGameCommand x)
+        private void Initialize(InitializeGameCommand command)
         {
-            _gameState = x.GameData;
-            foreach(var region in x.Regions)
+            _gameState = command.GameData;
+            foreach(var region in command.Regions)
             {
                 _regions[region.Name] = region;
             }
@@ -53,16 +53,16 @@ namespace BlockWars.Game.UI.Actors
             _clock.Start();
         }
 
-        private void CheckState(CheckStateCommand x)
+        private void CheckState(CheckStateCommand command)
         {
-            if (ShouldBeExpired())
+            if (!_expired && ShouldBeExpired())
             {
                 _clock.Stop();
                 _expired = true;
                 var endingMessage = new GameEndedMessage(_gameState.GameId, GetCurrentView());
                 Context.System.EventStream.Publish(endingMessage);
             }
-            else
+            else if(!_expired)
             {
                 PublishCurrentState();
             }
@@ -71,7 +71,7 @@ namespace BlockWars.Game.UI.Actors
 
         private bool ShouldBeExpired()
         {
-            return _clock.ElapsedMilliseconds > _gameState.Duration && !_expired;
+            return _clock.ElapsedMilliseconds > _gameState.Duration;
         }
 
         private void PublishCurrentState()
@@ -90,21 +90,21 @@ namespace BlockWars.Game.UI.Actors
             );
         }
 
-        private void BuildBlock(BuildBlockCommand x)
+        private void BuildBlock(BuildBlockCommand command)
         {
-            if (_regions.ContainsKey(x.RegionName) && !_expired)
+            if (_regions.ContainsKey(command.RegionName) && !_expired)
             {
-                var region = _regions[x.RegionName];
-                _regions[x.RegionName] = region.AddBlocks(1);
-                Sender.Tell(new BlockBuiltMessage(x.ConnectionId, _gameState.GameId));
+                var region = _regions[command.RegionName];
+                _regions[command.RegionName] = region.AddBlocks(1);
+                Sender.Tell(new BlockBuiltMessage(command.ConnectionId, _gameState.GameId));
             }
         }
 
-        private void AddRegion(AddRegionCommand x)
+        private void AddRegion(AddRegionCommand command)
         {
-            if (!_regions.ContainsKey(x.Region.Name) && !_expired)
+            if (!_regions.ContainsKey(command.Region.Name) && !_expired)
             {
-                _regions[x.Region.Name] = x.Region;
+                _regions[command.Region.Name] = command.Region;
             }
         }
     }
