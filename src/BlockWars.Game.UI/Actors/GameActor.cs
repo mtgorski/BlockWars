@@ -11,6 +11,7 @@ namespace BlockWars.Game.UI.Actors
     public class GameActor : ReceiveActor
     {
         private readonly Dictionary<string, RegionState> _regions = new Dictionary<string, RegionState>();
+        private readonly Dictionary<string, PlayerBlockCount> _playerClicks = new Dictionary<string, PlayerBlockCount>();
         private Models.GameState _gameState;
         private bool _expired;
         private Stopwatch _clock;
@@ -86,7 +87,8 @@ namespace BlockWars.Game.UI.Actors
             (
                 _gameState.Duration - _clock.ElapsedMilliseconds,
                 _gameState,
-                _regions.Values.ToList()
+                _regions.Values.ToList(),
+                _playerClicks.Values.ToList()
             );
         }
 
@@ -96,6 +98,15 @@ namespace BlockWars.Game.UI.Actors
             {
                 var region = _regions[command.RegionName];
                 _regions[command.RegionName] = region.AddBlocks(1);
+                if(!_playerClicks.ContainsKey(command.ConnectionId))
+                {
+                    _playerClicks[command.ConnectionId] = new PlayerBlockCount(command.ConnectionId, 1);
+                }
+                else
+                {
+                    var clicks = _playerClicks[command.ConnectionId];
+                    _playerClicks[command.ConnectionId] = clicks.AddClicks(1);
+                }
                 Sender.Tell(new BlockBuiltMessage(command.ConnectionId, _gameState.GameId));
             }
         }

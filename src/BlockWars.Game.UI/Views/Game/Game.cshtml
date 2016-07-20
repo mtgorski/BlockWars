@@ -7,21 +7,23 @@
     {
         <div class="row accomplishment-container" data-rank="@(Model.NumberAccomplishments - i)"></div>
     }
-    
-    @*<div class="row accomplishment-container">VII - World Builder</div>
-    <div class="row accomplishment-container">VI - Frenzied Finger</div>
-    <div class="row accomplishment-container">V - City Planner</div>
-    <div class="row accomplishment-container">IV - Architect</div>
-    <div class="row accomplishment-container">III - Mason</div>
-    <div class="row accomplishment-container">II - Lego Builder</div>
-    <div class="row accomplishment-container">I - Baby Builder</div>*@
 </div>
-<div class="col-md-8">
+<div class="col-md-6">
     <div id="time"></div>
     <div id="outcomeMessage"></div>
     <div id="gameContainer" class="row"></div>
     <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
 </div>
+<div class="col-md-2">
+    <div class="sidebar-label">Your name:</div>
+    <input id="playerName" type="text" />
+    <div id="namemsg"></div>
+    <div class="sidebar-label">Clicks:</div>
+    <div id="clickCount"></div>
+    <div id="topClickersHeader" class="sidebar-label">Top Clickers:</div>
+    <ol id="topClickers"></ol>
+</div>
+
 <script src="/lib/jquery/js/jquery.js"></script>
 <script src="/lib/signalr/jquery.signalr.js"></script>
 <script src="/signalr/hubs"></script>
@@ -37,9 +39,56 @@
             $("#outcomeMessage").hide();
             $("#gameContainer").empty();
             $(".accomplishment-container").empty();
+            $("#clickCount").text("0");
+            $("#topClickers").empty();
+            $("#topClickersHeader").text("Top Clickers:");
             currentGame = null;
         }
         $("#playAgainButton").click(playAgain);
+
+        function changeName(){
+            var name = $("#playerName").val();
+            gameHub.server.changeName(name);
+            $("#playerName").addClass("name-pending");
+            $("#playerName").removeClass("name-approved");
+            $("#playerName").removeClass("name-rejected");
+            $("#namemsg").hide();
+        }
+
+        $("#playerName").blur(changeName);
+
+        gameHub.client.updateName = function (nameSetResult) {
+            $("#playerName").removeClass("name-pending");
+
+            if (nameSetResult.Approved) {
+                $("#playerName").val(nameSetResult.Name);
+                $("#playerName").addClass("name-approved");    
+            }
+            else {
+                $("#playerName").addClass("name-rejected");
+                $("#namemsg").text(nameSetResult.Reason).show();
+            }
+        }
+
+        gameHub.client.updateLeaderboard = function (leaderboardMessage) {
+            if (currentGame != leaderboardMessage.GameId)
+                return;
+            $("#topClickers").empty();
+            if (leaderboardMessage.Final) {
+                $("#topClickersHeader").text("Top Clickers (final):");
+            }
+            for (var i = 0; i < leaderboardMessage.Leaders.length; i++) {
+                var text = leaderboardMessage.Leaders[i].Name + " : " + leaderboardMessage.Leaders[i].BlockCount;
+                var elem = $('<li>').text(text);
+                $("#topClickers").append(elem);
+            }
+        }
+
+        gameHub.client.updateBlockCount = function (blockCount) {
+            if (currentGame === blockCount.GameId) {
+                $("#clickCount").text(blockCount.Blocks);
+            }
+        }
 
         gameHub.client.onGameEnd = function (message) {
             $("#gameOver").show();

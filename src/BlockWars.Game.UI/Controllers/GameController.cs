@@ -22,7 +22,10 @@ namespace BlockWars.Game.UI.Controllers
         [HttpGet("games")]
         public IActionResult CurrentGame()
         {
-            return View("Game", new GamePageViewModel { NumberAccomplishments = _accomplishmentManager.GetCount() });
+            return View("Game",
+                new GamePageViewModel {
+                    NumberAccomplishments = _accomplishmentManager.GetCount()
+                });
         }
 
     }

@@ -12,5 +12,7 @@ namespace BlockWars.Game.UI
         void AddConnectedUser(string connectionId);
 
         void RemoveConnectedUser(string connectionId);
+
+        void ChangeName(string connectionId, string name);
     }
 }

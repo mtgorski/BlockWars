@@ -67,8 +67,9 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
 
             sut.Tell(new CheckStateCommand());
 
-            var expected = new GameViewModel(0, fixture.Game, fixture.Regions)
+            var expected = new GameViewModel(0, fixture.Game, fixture.Regions, new List<PlayerBlockCount>())
                 .AsSource().OfLikeness<GameViewModel>()
+                .Without(x => x.Players)
                 .Without(x => x.RemainingMilliseconds)
                 .With(x => x.Regions)
                 .EqualsWhen((x, y) => x.Regions.Count == y.Regions.Count && x.Regions.All(z => y.Regions.Single(a => a.RegionId == z.RegionId).Equals(z)));
@@ -149,6 +150,44 @@ namespace BlockWars.Game.UI.Unit.Tests.Actors
 
             var result = ExpectMsg<GameEndedMessage>();
             Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void ShouldKeepTrackOfFirstUserClick()
+        {
+            var fixture = new GameActorFixture(Sys);
+            var sut = fixture.GetInitializedSut();
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
+            var userId = Guid.NewGuid().ToString();
+
+            sut.Tell(new BuildBlockCommand(fixture.Game.GameId, fixture.AValidRegionName, userId));
+
+            ExpectMsg<BlockBuiltMessage>();
+
+            sut.Tell(new CheckStateCommand());
+            var expected = new PlayerBlockCount(userId, 1);
+            var actual = ExpectMsg<GameViewModel>().Players.Single(x => x.ConnectionId == userId);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ShouldKeepTrackOfMultipleUserClicks()
+        {
+            var fixture = new GameActorFixture(Sys);
+            var sut = fixture.GetInitializedSut();
+            Sys.EventStream.Subscribe(TestActor, typeof(GameViewModel));
+            var userId = Guid.NewGuid().ToString();
+
+            for(int i = 0; i < 3; i++)
+            {
+                sut.Tell(new BuildBlockCommand(fixture.Game.GameId, fixture.AValidRegionName, userId));
+                ExpectMsg<BlockBuiltMessage>();
+            }
+
+            sut.Tell(new CheckStateCommand());
+            var expected = new PlayerBlockCount(userId, 3);
+            var actual = ExpectMsg<GameViewModel>().Players.Single(x => x.ConnectionId == userId);
+            Assert.Equal(expected, actual);
         }
     }
 }

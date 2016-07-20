@@ -52,7 +52,7 @@ namespace BlockWars.Game.UI.Actors
 
             for(int i = 0; i < _options.Value.DemoBlocksPerCommand; i++)
             {
-                Context.ActorSelection("/user/supervisor/" + _currentGame.Value.Game.GameId).Tell(new BuildBlockCommand(_currentGame.Value.Game.GameId, whichRegion.Name, ""));
+                Context.ActorSelection("/user/supervisor/" + _currentGame.Value.Game.GameId).Tell(new BuildBlockCommand(_currentGame.Value.Game.GameId, whichRegion.Name, "DemoBot"));
             }            
         }
     }

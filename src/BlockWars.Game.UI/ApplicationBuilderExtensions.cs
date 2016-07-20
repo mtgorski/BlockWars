@@ -18,13 +18,17 @@ namespace BlockWars.Game.UI
             var demo = actorSystem.ActorOf(actorSystem.DI().Props<DemoActor>(), "demo");
             var saver = actorSystem.ActorOf(actorSystem.DI().Props<GamePersistenceActor>(), "saver");
             var statsSupervisor = actorSystem.ActorOf(actorSystem.DI().Props<PlayerSupervisor>(), "playerSupervisor");
+            var leaderboard = actorSystem.ActorOf(actorSystem.DI().Props<LeaderboardActor>(), "leaderboard");
+            var leaderboardBuffer = actorSystem.ActorOf(actorSystem.DI().Props<LeaderboardBuffer>(), "leaderboardBuffer");
 
             actorSystem.EventStream.Subscribe(broadcaster, typeof(GameViewModel));
             actorSystem.EventStream.Subscribe(demo, typeof(GameViewModel));
+            actorSystem.EventStream.Subscribe(leaderboardBuffer, typeof(GameViewModel));
 
             actorSystem.EventStream.Subscribe(broadcaster, typeof(GameEndedMessage));
             actorSystem.EventStream.Subscribe(saver, typeof(GameEndedMessage));
             actorSystem.EventStream.Subscribe(supervisor, typeof(GameEndedMessage));
+            actorSystem.EventStream.Subscribe(leaderboardBuffer, typeof(GameEndedMessage));
 
             actorSystem.EventStream.Subscribe(statsSupervisor, typeof(UserConnectedMessage));
             actorSystem.EventStream.Subscribe(statsSupervisor, typeof(UserDisconnectedMessage));

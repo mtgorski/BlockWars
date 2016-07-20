@@ -8,7 +8,7 @@ namespace BlockWars.Game.UI
 {
     /// <summary>
     /// A wrapper to the Akka actor system to allow clients to interact with the system
-    /// without know Akka details
+    /// without knowing Akka details
     /// </summary>
     public class AkkaAdapter : IServerManager
     {
@@ -38,6 +38,11 @@ namespace BlockWars.Game.UI
         public void RemoveConnectedUser(string connectionId)
         {
             _actorSystem.EventStream.Publish(new UserDisconnectedMessage(connectionId));
+        }
+
+        public void ChangeName(string connectionId, string name)
+        {
+            _actorSystem.ActorSelection("/user/playerSupervisor").Tell(new ChangeNameCommand(connectionId, name));
         }
     }
 }

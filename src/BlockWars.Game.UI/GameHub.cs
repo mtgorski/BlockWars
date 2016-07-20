@@ -38,5 +38,10 @@ namespace BlockWars.Game.UI
             return base.OnDisconnected(stopCalled);
         }
 
+        public void ChangeName(string name)
+        {
+            _serverManager.ChangeName(Context.ConnectionId, name);
+        }
+
     }
 }
