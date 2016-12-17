@@ -1,0 +1,5 @@
+﻿{
+	"urls": {
+		"GameStateApi": "http://localhost:5000"
+	}
+}

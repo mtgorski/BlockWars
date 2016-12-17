@@ -1,0 +1,165 @@
+﻿@model BlockWars.Game.UI.ViewModels.GamePageViewModel
+@{
+    Layout = @"~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-md-2">
+    @for (int i = 0; i < Model.NumberAccomplishments; i++)
+    {
+        <div class="row accomplishment-container" data-rank="@(Model.NumberAccomplishments - i)"></div>
+    }
+</div>
+<div class="col-md-6">
+    <div id="time"></div>
+    <div id="outcomeMessage"></div>
+    <div id="gameContainer" class="row"></div>
+    <div id="gameOver" hidden="hidden"><p>Game Over! <button id="playAgainButton" type="button" class="btn btn-info xobutton">Play Again!</button></div>
+</div>
+<div class="col-md-2">
+    <div class="sidebar-label">Your name:</div>
+    <input id="playerName" type="text" />
+    <div id="namemsg"></div>
+    <div class="sidebar-label">Clicks:</div>
+    <div id="clickCount"></div>
+    <div id="topClickersHeader" class="sidebar-label">Top Clickers:</div>
+    <ol id="topClickers"></ol>
+</div>
+
+<script src="/lib/jquery/js/jquery.js"></script>
+<script src="/lib/signalr/jquery.signalr.js"></script>
+<script src="/signalr/hubs"></script>
+<script>
+
+    $(function () {
+        var gameHub = $.connection.game;
+        var currentGame;
+
+        function playAgain() {
+            $("#gameOver").hide();
+            $("#time").show();
+            $("#outcomeMessage").hide();
+            $("#gameContainer").empty();
+            $(".accomplishment-container").empty();
+            $("#clickCount").text("0");
+            $("#topClickers").empty();
+            $("#topClickersHeader").text("Top Clickers:");
+            currentGame = null;
+        }
+        $("#playAgainButton").click(playAgain);
+
+        function changeName(){
+            var name = $("#playerName").val();
+            gameHub.server.changeName(name);
+            $("#playerName").addClass("name-pending");
+            $("#playerName").removeClass("name-approved");
+            $("#playerName").removeClass("name-rejected");
+            $("#namemsg").hide();
+        }
+
+        $("#playerName").blur(changeName);
+
+        gameHub.client.updateName = function (nameSetResult) {
+            $("#playerName").removeClass("name-pending");
+
+            if (nameSetResult.Approved) {
+                $("#playerName").val(nameSetResult.Name);
+                $("#playerName").addClass("name-approved");    
+            }
+            else {
+                $("#playerName").addClass("name-rejected");
+                $("#namemsg").text(nameSetResult.Reason).show();
+            }
+        }
+
+        gameHub.client.updateLeaderboard = function (leaderboardMessage) {
+            if (currentGame != leaderboardMessage.GameId)
+                return;
+            $("#topClickers").empty();
+            if (leaderboardMessage.Final) {
+                $("#topClickersHeader").text("Top Clickers (final):");
+            }
+            for (var i = 0; i < leaderboardMessage.Leaders.length; i++) {
+                var text = leaderboardMessage.Leaders[i].Name + " : " + leaderboardMessage.Leaders[i].BlockCount;
+                var elem = $('<li>').text(text);
+                $("#topClickers").append(elem);
+            }
+        }
+
+        gameHub.client.updateBlockCount = function (blockCount) {
+            if (currentGame === blockCount.GameId) {
+                $("#clickCount").text(blockCount.Blocks);
+            }
+        }
+
+        gameHub.client.onGameEnd = function (message) {
+            $("#gameOver").show();
+            $("#time").hide();
+            $("#gameContainer .build-button").prop('disabled', true).off('click');
+            $("#outcomeMessage").text(message).show();
+        };
+
+        gameHub.client.onAchieve = function (achievement) {
+            $(".accomplishment-container[data-rank=" + achievement.Rank +"]").text(achievement.Text);
+
+        };
+
+        gameHub.client.updateRegionInfo = function (gameInfo) {
+
+            if (currentGame == null) {
+                currentGame = gameInfo.Game.GameId;
+            }
+            if (currentGame != gameInfo.Game.GameId) {
+                return;
+            }
+
+            $("#time").text(Math.floor(gameInfo.RemainingMilliseconds / 1000));
+
+            $.each(gameInfo.Regions, function () {
+                if ($("#" + this.RegionId).length === 0) {
+                    var $newElement = $('<div>', { 'id': this.RegionId, 'class': 'region-container row' });
+                    var $hud = $('<div>', { 'class': 'row' });
+                    var $name = $('<div>', { 'class': 'region-name col-xs-6', 'style': 'font-size:30px' }).text(this.Name);
+                    var name = this.Name;
+                    var $click = $('<button>', { 'class': 'build-button col-xs-2' }).text('+').click(function () {
+                        gameHub.server.buildBlock(currentGame, name);
+                    });
+                    $hud.append($name);
+                    $newElement.append($hud);
+                    var $blockCount = $('<div>', { 'class': 'region-count col-xs-4', 'style': 'color:red;font-size:30px' }).text(this.BlockCount);
+                    $hud.append($blockCount);
+                    $hud.append($click);
+
+                    $blockDisplay = $('<div>', { 'class': 'block-display col-offset-xs-1 col-xs-9' });
+
+                    var rows = 10;
+                    for (var i = rows; i > 0; i--) {
+                        var $row = $('<div>', { 'class': 'row' });
+                        for (var j = 0; j < 10; j++) {
+                            var $block = $('<div>', { 'class': 'block col-xs-1', 'data-number': i + j * 10 });
+                            $row.append($block);
+                        }
+                        $blockDisplay.append($row);
+                    }
+                    $newElement.append($blockDisplay);
+                    $("#gameContainer").append($newElement);
+                }
+                var regionSelector = "#" + this.RegionId;
+                var blockCount = this.BlockCount;
+                var blockFactor = getBlockFactor(blockCount);
+
+
+
+                $(regionSelector + " .region-count").text(this.BlockCount);
+                $(regionSelector + " .block").removeClass('built-block').filter(function () {
+                    var number = $(this).data('number');
+                    return number <= ((blockCount / blockFactor) % 100);
+                }).addClass('built-block');
+            });
+        }
+
+        function getBlockFactor(blockCount) {
+            return 1;
+        }
+
+        $.connection.hub.start();
+    });
+</script>
