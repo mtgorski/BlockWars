@@ -52,6 +52,9 @@ namespace BlockWars.Game.UI.Actors
 
         private void ChangeName(ChangeNameCommand command)
         {
+            if (_connectionIdToName.ContainsKey(command.ConnectionId) && _connectionIdToName[command.ConnectionId] == command.Name)
+                return;
+
             var validationResult = GetValidationResult(command);
             if (validationResult.Approved)
             {
